@@ -24,14 +24,11 @@ Notre site permettrait également aux consommateurs de prendre conscience des al
 <br/><br/>
 
 * Recherche de produits à partir d’un mot clé (ex: Jus d’orange, pâte à tartiner). Possibilité d’ajouter des filtres pour obtenir un résultat plus pertinent. Le résultat de la recherche retourne, dans l’ordre, les produits les plus sains sur des critères de nutrition, transformation, additifs, présence d'allergène. Les produits les plus sains seraient alors mis en avant pour le consommateur souhaitant adapter ses achats.
-<br/>
 
 * Authentification de l’utilisateur avec stockage des deux listes expliquées ci-dessous. Cela lui permettra de pouvoir se connecter à partir de plusieurs plateformes et de simplement retrouver ses données.
-<br/>
 
 * Création d’une liste de produits permettant à l’utilisateur de la consulter facilement lorsqu’il fait ses courses. Ainsi, il peut visualiser rapidement quels sont les produits dont il a besoin et les repérer dans le rayon grâce à la photo mise à sa disposition sur l’application.<br/>
 L’utilisateur peut créer, modifier et supprimer autant de listes de produits qu’il souhaite.
-<br/>
 
 * Ajout de produits à une liste de “Favoris” (indépendante de la liste de produits expliquée précédemment). A partir d’une recherche, l’utilisateur peut sélectionner et ajouter à ses favoris les produits qu’il souhaite garder de côté. Par exemple, il pourra facilement compléter sa liste de produit à partir de ses favoris.
 <br/><br/>
@@ -87,9 +84,9 @@ répondre concrètement avec un plan d’action détaillé distribué sur l’en
 
 
 
-<u>Sous-ensemble fonctionnel viable:</u> Un site permettant de rechercher un produit, de l’ajouter à la liste des favoris ou à une liste de produits.<br/><br/>
+<i>Sous-ensemble fonctionnel viable:</i> Un site permettant de rechercher un produit, de l’ajouter à la liste des favoris ou à une liste de produits.<br/><br/>
 
-<u>Scénario possible d’interaction avec l’utilisateur:</u><br/>
+<i>Scénario possible d’interaction avec l’utilisateur:</i><br/>
 
 <ol>
   <li>L’utilisateur se connecte</li>
