@@ -1,7 +1,7 @@
 # Loviday
 Asynchronous Programming project repo
 
-Link to the chart on google drive : 
+Link to the specification on google drive : 
 https://docs.google.com/document/d/1JTXnYhJt1o7ouNftORzqDJryLtW5tXUKg0cixRo0xXI/edit?usp=sharing
 
 
