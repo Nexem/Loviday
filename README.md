@@ -85,7 +85,7 @@ intégrer dans cet agenda des points intermédiaires réguliers d’équipe, phy
 
 <h2><strong>Prototype initial</strong></h2>
 <br/><br/>
-répondre concrètement avec un plan d’action détaillé distribué sur l’ensemble de l’équipe à la question de ‘comment on réalise ce prototype demain ?’.
+répondre concrètement avec un plan d’action détaillé distribué sur l’ensemble de l’équipe à la question de ‘comment on réalise ce prototype demain ?’.</br></br>
 
 
 
