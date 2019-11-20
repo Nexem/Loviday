@@ -5,7 +5,7 @@ Link to the specification on google drive :
 https://docs.google.com/document/d/1JTXnYhJt1o7ouNftORzqDJryLtW5tXUKg0cixRo0xXI/edit?usp=sharing
 
 
-Loviday
+<strong>Loviday</strong>
 
 
 
