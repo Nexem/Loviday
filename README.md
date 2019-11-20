@@ -113,13 +113,21 @@ intégrer dans cet agenda des points intermédiaires réguliers d’équipe, phy
 
 Prototype initial:
 
-définir un sous-ensemble fonctionnel viable qui permet immédiatement de faire des tests d’utilisation,
-en préciser les contours et les contenus fonctionnels (fonctionnalités détaillées, scénario d’interaction avec l’utilisateur).
 répondre concrètement avec un plan d’action détaillé distribué sur l’ensemble de l’équipe à la question de ‘comment on réalise ce prototype demain ?’.
 
 
 
 Sous-ensemble fonctionnel viable: Un site permettant de rechercher un produit, de l’ajouter à la liste des favoris ou à une liste de produits.
+
+Scénario possible d’interaction avec l’utilisateur:
+
+1- L’utilisateur se connecte
+2- Il crée et nomme une liste de produits: courses du 20/11
+3- Il fait une recherche: purée
+4- Il sélectionne le produit qui l’intéresse parmi la liste retournée, et accède à sa fiche détaillée: mousseline
+5- Il l’ajoute à “courses du 20/11”
+6- Il va consulter cette même liste depuis le menu
+
 
 
 
