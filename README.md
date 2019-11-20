@@ -6,7 +6,9 @@ https://docs.google.com/document/d/1JTXnYhJt1o7ouNftORzqDJryLtW5tXUKg0cixRo0xXI/
 <br/><br/><br/>
 
 
-<strong>Sujet:</strong> Loviday est un site web permettant à ses utilisateurs de faire des recherches sur des aliments afin d’en savoir davantage sur leur composition. A cette fonctionnalité s’ajouteront d’autres possibilités telles que l’ajout d’aliments à une liste de favoris. Nous les expliquerons plus tard dans ce document.
+<h2><strong>Sujet</strong></h2>
+
+Loviday est un site web permettant à ses utilisateurs de faire des recherches sur des aliments afin d’en savoir davantage sur leur composition. A cette fonctionnalité s’ajouteront d’autres possibilités telles que l’ajout d’aliments à une liste de favoris. Nous les expliquerons plus tard dans ce document.
 <br/><br/>
 
 <strong>Problème:</strong> Aujourd’hui, nombreux sont ceux qui essaient de manger plus sainement et qui veulent davantage de transparence sur les aliments qu’ils ingèrent. Toutefois, il est très long de lire la composition de chaque paquet de gâteau avant de trouver celui qui sera parfait à consommer. Aussi, même en lisant la composition, pour être capable de savoir quels composants sont nocifs ou bénéfiques, cela demande des connaissances que la plupart des gens n’ont pas.
@@ -20,7 +22,9 @@ Notre site permettrait également aux consommateurs de prendre conscience des al
 <br/><br/><br/>
 
 
-<strong>Concept:</strong> Notre solution reposera sur l’utilisation de l’API OpenFoodFact. Elle proposera plusieurs fonctionnalités.
+<h2><strong>Concept</strong></h2>
+
+Notre solution reposera sur l’utilisation de l’API OpenFoodFact. Elle proposera plusieurs fonctionnalités.
 <br/><br/>
 
 * Recherche de produits à partir d’un mot clé (ex: Jus d’orange, pâte à tartiner). Possibilité d’ajouter des filtres pour obtenir un résultat plus pertinent. Le résultat de la recherche retourne, dans l’ordre, les produits les plus sains sur des critères de nutrition, transformation, additifs, présence d'allergène. Les produits les plus sains seraient alors mis en avant pour le consommateur souhaitant adapter ses achats.
@@ -55,7 +59,8 @@ Système d’authentification sécurisé
 
 
 
-<strong>Planifier:</strong>
+<h2><strong>Planification</strong></h2>
+
 définir une feuille de route, avec les phases (ou cycles, ou sprints) et étapes intermédiaires (sous-buts) de développement en vue d’atteindre le but principal (réussir la soutenance).
 estimer le volume de travail de chaque phase et des tâches associées,
 distribuer cette charge équitablement, en fonction des compétences et responsabilités de chaque membre de l’équipe,
@@ -78,15 +83,15 @@ intégrer dans cet agenda des points intermédiaires réguliers d’équipe, phy
 
 
 
-<strong>Prototype initial:</strong>
+<h2><strong>Prototype initial</strong></h2>
 <br/><br/>
 répondre concrètement avec un plan d’action détaillé distribué sur l’ensemble de l’équipe à la question de ‘comment on réalise ce prototype demain ?’.
 
 
 
-<i>Sous-ensemble fonctionnel viable:</i> Un site permettant de rechercher un produit, de l’ajouter à la liste des favoris ou à une liste de produits.<br/><br/>
+<strong>Sous-ensemble fonctionnel viable:</strong> Un site permettant de rechercher un produit, de l’ajouter à la liste des favoris ou à une liste de produits.<br/><br/>
 
-<i>Scénario possible d’interaction avec l’utilisateur:</i><br/>
+<strong>Scénario possible d’interaction avec l’utilisateur:</strong><br/>
 
 <ol>
   <li>L’utilisateur se connecte</li>
