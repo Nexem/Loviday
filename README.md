@@ -3,7 +3,7 @@ Asynchronous Programming project repo
 
 Link to the specification on google drive : 
 https://docs.google.com/document/d/1JTXnYhJt1o7ouNftORzqDJryLtW5tXUKg0cixRo0xXI/edit?usp=sharing
-<br/><br/><br/>
+<br/>
 
 
 <h2><strong>Sujet</strong></h2>
@@ -20,6 +20,7 @@ Loviday est un site web permettant à ses utilisateurs de faire des recherches s
 <strong>Solution:</strong> Notre projet a pour but de faciliter l’accès aux informations demandées par de plus en plus de personnes. Diverses applications mobiles, telles que Yuka, permettent actuellement de scanner les produits que l’on peut trouver dans les rayons de supermarchés. Toutefois, elles ne permettent pas de faire des recherches manuelles. Ainsi, si l’on veut trouver le meilleur paquet de gâteau pour sa santé, nous nous retrouvons obligés de scanner un à un les paquets se trouvant dans le rayon. Notre solution permet donc de faire des recherches en amont. Cela permet aux consommateurs de gagner du temps lorsqu’ils font leurs courses.<br/>
 Notre site permettrait également aux consommateurs de prendre conscience des alternatives existantes à leurs moyens de consommations habituels.
 <br/><br/><br/>
+
 
 
 <h2><strong>Concept</strong></h2>
@@ -45,7 +46,6 @@ L’utilisateur peut créer, modifier et supprimer autant de listes de produits 
 Une programmation asynchrone sera également nécessaire afin d’actualiser en temps réel la liste des produits sur la page et ainsi éviter les temps de chargement (potentiellement beaucoup de données à traiter).
 <br/><br/>
 
-
 <strong>Visuel/Ergonomie:</strong> Créer un site web ergonomique et simple d’utilisation. Il est important de minimiser les étapes entre l’arrivée sur le site et l’obtention d’une liste de produits correspondant aux recherches. Le site doit être épuré et accessible à une majorité d’utilisateurs. Les informations ne doivent pas être surchargées. Le site se devra responsive pour permettre une bonne utilisation du site même sur smartphone.<br/>
 
 Un premier affichage de la liste avec uniquement le nom des produits et des marques avec de simples indices de couleurs permettra une lisibilité rapide des principales informations. Il faudrait alors permettre ensuite, au clic d’un utilisateur sur un produit, proposer un affichage complet sur toutes les informations du produit dans une fenêtre style pop-up se superposant à la page et pouvant être quittée par un simple clic hors du cadre.<br/>
@@ -61,33 +61,19 @@ Système d’authentification sécurisé
 
 <h2><strong>Planification</strong></h2>
 
-définir une feuille de route, avec les phases (ou cycles, ou sprints) et étapes intermédiaires (sous-buts) de développement en vue d’atteindre le but principal (réussir la soutenance).
+<i>définir une feuille de route, avec les phases (ou cycles, ou sprints) et étapes intermédiaires (sous-buts) de développement en vue d’atteindre le but principal (réussir la soutenance).
 estimer le volume de travail de chaque phase et des tâches associées,
 distribuer cette charge équitablement, en fonction des compétences et responsabilités de chaque membre de l’équipe,
 se donner un calendrier prévisionnel avec les dates repères des étapes et des objectifs à atteindre pour celle-ci, collectivement et individuellement.
-intégrer dans cet agenda des points intermédiaires réguliers d’équipe, physiques ou à distance, pour faire un point d’avancement sur la phase en cours et préciser les objectifs collectifs et individuels pour le sprint suivant. Une fréquence hebdomadaire est une bonne fréquence.
+intégrer dans cet agenda des points intermédiaires réguliers d’équipe, physiques ou à distance, pour faire un point d’avancement sur la phase en cours et préciser les objectifs collectifs et individuels pour le sprint suivant. Une fréquence hebdomadaire est une bonne fréquence.</i>
 <br/><br/><br/>
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 <h2><strong>Prototype initial</strong></h2>
-<br/><br/>
-répondre concrètement avec un plan d’action détaillé distribué sur l’ensemble de l’équipe à la question de ‘comment on réalise ce prototype demain ?’.</br></br>
 
-
+<i>répondre concrètement avec un plan d’action détaillé distribué sur l’ensemble de l’équipe à la question de ‘comment on réalise ce prototype demain ?’.</i>
+</br></br>
 
 <strong>Sous-ensemble fonctionnel viable:</strong> Un site permettant de rechercher un produit, de l’ajouter à la liste des favoris ou à une liste de produits.<br/><br/>
 
