@@ -61,20 +61,9 @@ Nous ajouterons à ces éléments une barre de recherche visible en permanence a
 Back-end : Nous implémenterons une API REST
 Système d’authentification sécurisé
 
-IDEE : c’est pas ouf de se limite seulement à faire une recherche d’aliments
-Faire un moteur de recherche c’est bien mais la vraie plus value ça peut être de faire son panier de courses par exemple
-
-Je me disais : on utilise une API Carrefour, Auchan, Casino, pour indiquer sur chaque produit dans quelles grandes enseignes il est dispo et à quel prix
-
-
-
 on peut proposer de rajouter des aliments aux favoris (ceux que l’on veut facilement retrouver)
 mais on peut aussi proposer aux utilisateurs de créer leur liste de course: petite photo du produit et le nom. Ca leur permettrait de facilement repérer les produits en rayon. (moins difficile)
 Après, si vraiment on a du temps, on pourra faire le lien avec l’API d’un magasin, puis avec d’autres magasins
-
-
-Après j’ai pensé à un truc : on pourrait faire un export de la liste vers une appli memo. Genre OneNote :
-Cliquer ici 😋
 
 
 
