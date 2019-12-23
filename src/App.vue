@@ -2,22 +2,32 @@
   <v-app id="inspire" light>
     <!-- toolbar on the top of every page -->
     <v-toolbar color="#373737">
-      <!-- Menu -->
-      <v-btn left @click.stop="drawer = !drawer" color="#F1C100">Menu</v-btn>
-      <!-- v-icon left @click.stop="drawer = !drawer" color="#F1C100">menu</v-icon -->
 
-      <v-icon color="#F1C100" @click="next">search</v-icon>
+      <!-- Menu -->
+      <v-btn left @click.stop="drawer = !drawer" color="#F1C100" class="white--text">Menu</v-btn>
+      <!-- v-icon left @click.stop="drawer = !drawer" color="#F1C100">menu</v-icon -->
 
       <v-spacer></v-spacer>
       <v-toolbar-title class="white--text">LOVIDAY</v-toolbar-title>
       <v-spacer></v-spacer>
+
+      <!-- search bar -->
+      <v-text-field
+        id="search"
+        prepend-inner-icon="search"
+        v-model="search"
+        dense outlined
+        color="#F1C100"
+        label="Search"
+        class="mt-7 mr-3"
+        background-color="#FFFAF5"
+      ></v-text-field>
 
       <!-- dialog for connexion -->
       <v-dialog v-model="Register" max-width="600px" style="background-color: floralwhite">
         <template v-slot:activator="{ on }">
           <v-btn color="#F1C100" class="white--text" dark v-on="on">
             <v-icon>power_settings_new</v-icon>
-            CONNEXION
           </v-btn>
         </template>
         <v-card color="#FFFAF5">
@@ -99,7 +109,7 @@
     </v-toolbar>
 
     <!-- Contenu du menu -->
-    <v-navigation-drawer v-model='drawer' absolute temporary>
+    <v-navigation-drawer v-model='drawer' absolute temporary color="#373737" class="white--text">
       <!-- the user -->
       <v-list-item>
         <v-list-item-avatar>
@@ -114,6 +124,26 @@
 
       <!-- other functionalities -->
       <v-list dense>
+        <v-list-item>
+          <v-list-item-icon>home</v-list-item-icon>
+          <v-list-item-content>Home</v-list-item-content>
+        </v-list-item>
+        <v-list-item>
+          <v-list-item-icon>shopping_cart</v-list-item-icon>
+          <v-list-item-content>My products' lists</v-list-item-content>
+        </v-list-item>
+        <v-list-item>
+          <v-list-item-icon>favorite</v-list-item-icon>
+          <v-list-item-content>My favorites</v-list-item-content>
+        </v-list-item>
+        <v-list-item>
+          <v-list-item-icon>search</v-list-item-icon>
+          <v-list-item-content>Do a research</v-list-item-content>
+        </v-list-item>
+        <v-list-item>
+          <v-list-item-icon>account_circle</v-list-item-icon>
+          <v-list-item-content>My account</v-list-item-content>
+        </v-list-item>
         <v-list-item>
           <v-list-item-icon>logout</v-list-item-icon>
           <v-list-item-content>Log out</v-list-item-content>
