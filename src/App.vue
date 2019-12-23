@@ -2,7 +2,6 @@
   <v-app id="inspire" light>
     <!-- toolbar on the top of every page -->
     <v-toolbar color="#373737">
-
       <!-- Menu -->
       <v-btn left @click.stop="drawer = !drawer" color="#F1C100" class="white--text">Menu</v-btn>
       <!-- v-icon left @click.stop="drawer = !drawer" color="#F1C100">menu</v-icon -->
@@ -16,7 +15,8 @@
         id="search"
         prepend-inner-icon="search"
         v-model="search"
-        dense outlined
+        dense
+        outlined
         color="#F1C100"
         label="Search"
         class="mt-7 mr-3"
@@ -109,7 +109,7 @@
     </v-toolbar>
 
     <!-- Contenu du menu -->
-    <v-navigation-drawer v-model='drawer' absolute temporary color="#373737" class="white--text">
+    <v-navigation-drawer v-model="drawer" absolute temporary color="#FFFAF5" class="white--text">
       <!-- the user -->
       <v-list-item>
         <v-list-item-avatar>
@@ -125,32 +125,33 @@
       <!-- other functionalities -->
       <v-list dense>
         <v-list-item>
-          <v-list-item-icon>home</v-list-item-icon>
-          <v-list-item-content>Home</v-list-item-content>
+          <v-list-item @click='movePage("Welcome")'>
+            <v-icon class="mr-2">home</v-icon>
+            <v-list-item-content>Home</v-list-item-content>
+          </v-list-item>
         </v-list-item>
         <v-list-item>
-          <v-list-item-icon>shopping_cart</v-list-item-icon>
+          <v-icon class="mr-2">shopping_cart</v-icon>
           <v-list-item-content>My products' lists</v-list-item-content>
         </v-list-item>
         <v-list-item>
-          <v-list-item-icon>favorite</v-list-item-icon>
+          <v-icon class="mr-2">favorite</v-icon>
           <v-list-item-content>My favorites</v-list-item-content>
         </v-list-item>
         <v-list-item>
-          <v-list-item-icon>search</v-list-item-icon>
+          <v-icon class="mr-2">search</v-icon>
           <v-list-item-content>Do a research</v-list-item-content>
         </v-list-item>
         <v-list-item>
-          <v-list-item-icon>account_circle</v-list-item-icon>
+          <v-icon class="mr-2">account_circle</v-icon>
           <v-list-item-content>My account</v-list-item-content>
         </v-list-item>
         <v-list-item>
-          <v-list-item-icon>logout</v-list-item-icon>
+          <v-icon class="mr-2">logout</v-icon>
           <v-list-item-content>Log out</v-list-item-content>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-
 
     <router-view></router-view>
   </v-app>
@@ -161,7 +162,7 @@
 @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,200i,300,300i,400,400i,600,600i,700,700i,900,900i|Monoton");
 
 span.register {
-  color: #F1C100;
+  color: #f1c100;
   font-family: "Source Sans Pro", sans-serif;
   font-size: 25px;
   margin-bottom: 0.5rm;
@@ -184,11 +185,9 @@ h3 {
 <script>
 export default {
   name: "App",
-  data() {
-    return {
-      //
-    };
-  },
+  data: () => ({
+    drawer: null
+  }),
   created() {
     this.movePage("Welcome");
   },
