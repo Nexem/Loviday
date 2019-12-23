@@ -1,9 +1,10 @@
 <template>
   <v-app id="inspire" light>
+
     <!-- toolbar on the top of every page -->
     <v-toolbar color="#373737">
       <!-- Menu -->
-      <v-btn left @click.stop="drawer = !drawer" color="#F1C100">Menu</v-btn>
+      <v-btn flat @click.stop="drawer = !drawer" color="#F1C100">Menu</v-btn>
       <!-- v-icon left @click.stop="drawer = !drawer" color="#F1C100">menu</v-icon -->
 
       <v-icon color="#F1C100" @click="next">search</v-icon>
