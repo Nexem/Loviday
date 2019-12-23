@@ -12,7 +12,7 @@
           color = "#373737"
           class="white--text"
           block
-          @click='movePage("Lists")'
+          @click="movePage('Lists')"
         >My products' lists</v-btn>
       </v-col>
       <v-col
@@ -23,7 +23,7 @@
           color = "#373737"
           class="white--text"
           block
-          @click='movePage("Favorites")'
+          @click="movePage('Favorites')"
         >My favorites</v-btn>
       </v-col>
       <v-col
@@ -34,7 +34,7 @@
           color = "#373737"
           class="white--text"
           block
-          @click='movePage("Research")'
+          @click="movePage('Research')"
         >Do a research</v-btn>
       </v-col>
       <v-col></v-col>
@@ -70,7 +70,7 @@ export default {
   data: () => ({
   }),
   methods: {
-    // fonctions pour la redirection à partir des boutons du menu de gauche
+    // function to redirect to other pages
     movePage(path) {
       this.$router.push(path);
     }

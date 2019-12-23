@@ -3,11 +3,12 @@
     <!-- toolbar on the top of every page -->
     <v-toolbar color="#373737">
       <!-- Menu -->
-      <v-btn left @click.stop="drawer = !drawer" color="#F1C100" class="white--text">Menu</v-btn>
-      <!-- v-icon left @click.stop="drawer = !drawer" color="#F1C100">menu</v-icon -->
+      <v-btn left @click.stop="drawer = !drawer" color="#F1C100" class="white--text">
+        <v-icon color="white">menu</v-icon>
+      </v-btn>
 
       <v-spacer></v-spacer>
-      <v-toolbar-title class="white--text">LOVIDAY</v-toolbar-title>
+      <v-toolbar-title class="white--text" color="#FFFAF5">LOVIDAY</v-toolbar-title>
       <v-spacer></v-spacer>
 
       <!-- search bar -->
@@ -124,25 +125,23 @@
 
       <!-- other functionalities -->
       <v-list dense>
-        <v-list-item>
-          <v-list-item @click='movePage("Welcome")'>
-            <v-icon class="mr-2">home</v-icon>
-            <v-list-item-content>Home</v-list-item-content>
-          </v-list-item>
+        <v-list-item @click='movePage("Welcome")'>
+          <v-icon class="mr-2">home</v-icon>
+          <v-list-item-content>Home</v-list-item-content>
         </v-list-item>
-        <v-list-item>
+        <v-list-item @click='movePage("Lists")'>
           <v-icon class="mr-2">shopping_cart</v-icon>
           <v-list-item-content>My products' lists</v-list-item-content>
         </v-list-item>
-        <v-list-item>
+        <v-list-item @click='movePage("Favorites")'>
           <v-icon class="mr-2">favorite</v-icon>
           <v-list-item-content>My favorites</v-list-item-content>
         </v-list-item>
-        <v-list-item>
+        <v-list-item @click='movePage("Research")'>
           <v-icon class="mr-2">search</v-icon>
           <v-list-item-content>Do a research</v-list-item-content>
         </v-list-item>
-        <v-list-item>
+        <v-list-item @click='movePage("Account")'>
           <v-icon class="mr-2">account_circle</v-icon>
           <v-list-item-content>My account</v-list-item-content>
         </v-list-item>
