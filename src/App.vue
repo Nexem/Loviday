@@ -1,18 +1,29 @@
 <template>
   <v-app id="inspire" light>
-    <v-toolbar>
-      <!-- ajouter bouton menu -->
 
-      <v-toolbar-title class="floralwhite--text">LOVIDAY</v-toolbar-title>
+    <!-- toolbar on the top of every page -->
+    <v-toolbar color="#373737">
+      <!-- Menu -->
+      <v-btn flat @click.stop="drawer = !drawer" color="#F1C100">Menu</v-btn>
+      <!-- v-icon left @click.stop="drawer = !drawer" color="#F1C100">menu</v-icon -->
+
+      <v-icon color="#F1C100" @click="next">search</v-icon>
+
+      <v-spacer></v-spacer>
+      <v-toolbar-title class="white--text">LOVIDAY</v-toolbar-title>
+      <v-spacer></v-spacer>
 
       <!-- dialog for connexion -->
       <v-dialog v-model="Register" max-width="600px" style="background-color: floralwhite">
         <template v-slot:activator="{ on }">
-          <v-btn color="floralwhite" class="grey--text" dark v-on="on">CONNEXION</v-btn>
+          <v-btn color="#F1C100" class="white--text" dark v-on="on">
+            <v-icon>power_settings_new</v-icon>
+            CONNEXION
+          </v-btn>
         </template>
-        <v-card>
+        <v-card color="#FFFAF5">
           <v-card-title>
-            <span class="register">LOG IN</span>
+            <span class="register">CONNEXION</span>
           </v-card-title>
           <v-card-text>
             <v-container>
@@ -22,18 +33,18 @@
                     outlined
                     dense
                     required
-                    v-model='Email' 
-                    label='Email address' 
+                    v-model="Email"
+                    label="Email address"
                     Email
                     prepend-inner-icon="person"
                   ></v-text-field>
-                  <br>
+                  <br />
                   <v-text-field
                     outlined
                     dense
                     required
-                    v-model='Pwd' 
-                    label='Password' 
+                    v-model="Pwd"
+                    label="Password"
                     Pwd
                     prepend-inner-icon="lock"
                     :type="show1 ? 'text' : 'password'"
@@ -46,67 +57,73 @@
             </v-container>
           </v-card-text>
           <v-card-actions>
-            <v-btn @click='checkForm' color="grey" class="white--text">CONNECTION</v-btn>
+            <v-btn @click="checkForm" color="#F1C100" text>CONNEXION</v-btn>
             <v-spacer></v-spacer>
-            <v-btn @click='checkForm' color="grey" class="white--text">CANCEL</v-btn>
+
+            <!-- dialog for registration -->
+            <v-dialog v-model="Register" max-width="600px" style="background-color: floralwhite">
+              <template v-slot:activator="{ on }">
+                <v-btn color="#F1C100" text dark v-on="on">REGISTRATION</v-btn>
+              </template>
+              <v-card color="#FFFAF5">
+                <v-card-title>
+                  <span class="register">REGISTRATION</span>
+                </v-card-title>
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field label="First name*" required outlined></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field label="Last name*" required outlined></v-text-field>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field label="Email*" required outlined></v-text-field>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field label="Password*" type="password" required outlined></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                  <small>*indicates required field</small>
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="#F1C100" text @click="dialog = false">Save</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </v-card-actions>
         </v-card>
       </v-dialog>
-
-      <!-- dialog for registration -->
-      <v-dialog v-model="Register" max-width="600px" style="background-color: floralwhite">
-            <template v-slot:activator="{ on }">
-              <v-btn color="floralwhite" class="grey--text" dark v-on="on">REGISTRATION</v-btn>
-            </template>
-            <v-card>
-              <v-card-title>
-                <span class="register">REGISTRATION</span>
-              </v-card-title>
-              <v-card-text>
-                <v-container>
-                  <v-row>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field 
-                        label="First name*" 
-                        required 
-                        outlined
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        label="Last name*"
-                        required
-                        outlined
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-                      <v-text-field 
-                        label="Email*" 
-                        required
-                        outlined
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-                      <v-text-field 
-                        label="Password*" 
-                        type="password" 
-                        required
-                        outlined
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
-                </v-container>
-                <small>*indicates required field</small>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="grey" text @click="dialog = false">Close</v-btn>
-                <v-btn color="grey" text @click="dialog = false">Save</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
     </v-toolbar>
-  <router-view></router-view>
+
+    <!-- Contenu du menu -->
+    <v-navigation-drawer v-model='drawer' absolute temporary>
+      <!-- the user -->
+      <v-list-item>
+        <v-list-item-avatar>
+          <v-img src="https://randomuser.me/api/portraits/men/78.jpg"></v-img>
+        </v-list-item-avatar>
+        <v-list-item-content>
+          <v-list-item-title>John Leider</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-divider></v-divider>
+
+      <!-- other functionalities -->
+      <v-list dense>
+        <v-list-item>
+          <v-list-item-icon>logout</v-list-item-icon>
+          <v-list-item-content>Log out</v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+
+
+    <router-view></router-view>
   </v-app>
 </template>
 
@@ -115,41 +132,41 @@
 @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,200i,300,300i,400,400i,600,600i,700,700i,900,900i|Monoton");
 
 span.register {
-  color: grey;
-  font-family: 'Source Sans Pro', sans-serif;
+  color: #F1C100;
+  font-family: "Source Sans Pro", sans-serif;
   font-size: 25px;
-  margin-bottom: .5rm;
-  display: flex; 
-  justify-content: center; 
+  margin-bottom: 0.5rm;
+  display: flex;
+  justify-content: center;
   align-items: center;
 }
 
 h3 {
   color: grey;
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: "Source Sans Pro", sans-serif;
   font-size: 40px;
-  margin-bottom: .5rm;
-  display: flex; 
-  justify-content: center; 
+  margin-bottom: 0.5rm;
+  display: flex;
+  justify-content: center;
   align-items: center;
 }
 </style>
 
 <script>
 export default {
-  name: 'App',
-  data () {
+  name: "App",
+  data() {
     return {
       //
-    }
+    };
   },
-  created () {
-    this.movePage('Welcome')
+  created() {
+    this.movePage("Welcome");
   },
   methods: {
-    movePage (path) {
-      this.$router.push(path)
+    movePage(path) {
+      this.$router.push(path);
     }
   }
-}
+};
 </script>
