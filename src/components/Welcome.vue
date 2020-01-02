@@ -66,6 +66,8 @@ h3 {
 </style>
 
 <script>
+import axios from 'axios'
+
 export default {
   data: () => ({
   }),
@@ -74,6 +76,21 @@ export default {
     movePage(path) {
       this.$router.push(path);
     }
-  }
+  },
+  created() {
+      axios
+        // send product code to backend
+        // .post('http://localhost:3000/code', { code: '3178530405774' })
+
+        // search a product (keywords are set in back end for the moment)
+        .post('http://localhost:3000/search')
+        // get product information from backend
+        .then(function (response) {
+          // eslint-disable-next-line no-console
+          console.log('hey')
+          // eslint-disable-next-line no-console
+          console.log(response.data)
+        })
+    }
 }
 </script>
