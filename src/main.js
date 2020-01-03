@@ -6,6 +6,7 @@ import Login from './components/Login.vue'
 import Welcome from './components/Welcome.vue'
 import Research from './components/Research.vue'
 import Lists from './components/Lists.vue'
+import Favorites from './components/Favorites.vue'
 import Vuex from 'vuex'
 
 Vue.config.productionTip = false
@@ -34,6 +35,11 @@ const router = new VueRouter({
       path: '/Lists',
       component: Lists,
       name: 'Lists'
+    },
+    {
+      path: '/Favorites',
+      component: Favorites,
+      name: 'Favorites'
     }
   ]
 })
@@ -45,7 +51,7 @@ const store = new Vuex.Store({
       pwd: ''
     },
     productList: {
-      nameProduct: ['item1']
+      nameProduct: ['item1', 'item2']
     },
     favsList: {
       nameProduct: []
@@ -58,10 +64,10 @@ const store = new Vuex.Store({
       state.user.pwd = pwd
       router.push('App')
     },
-    addProductToList (state, [nameProduct]) {
+    addProductToList (state, nameProduct) {
       state.productList.nameProduct.push(nameProduct)
     },
-    addFavsList (state, [nameProduct]) {
+    addFavsList (state, nameProduct) {
       state.favsList.nameProduct.push(nameProduct)
     }
   },

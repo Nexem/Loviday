@@ -11,32 +11,37 @@
             <v-divider v-if="!item" :key="`divider-${i}`"></v-divider>
 
             <v-list-item
-              v-else
               :key="`item-${i}`"
               :value="item"
-              active-class="green--text text--accent-4"
             >
-              <template v-slot:default="{ active, toggle }">
                 <v-list-item-content>
                   <v-list-item-title v-text="item"></v-list-item-title>
                 </v-list-item-content>
 
                 <v-list-item-action>
-                  <v-checkbox
+                  <v-btn
                     :input-value="active"
                     :true-value="item"
-                    color="green accent-4"
-                    @change="productSelected"
-                  ></v-checkbox>
+                    text icon color="blue lighten-2"
+                    @click="addToFavs(item)"
+                  >
+                    <v-icon>mdi-heart-outline</v-icon>
+                  </v-btn> 
                 </v-list-item-action>
-              </template>
+                
+                <v-list-item-action>
+                  <v-btn
+                    :input-value="active"
+                    :true-value="item"
+                    text icon color="red"
+                    @click="deleteList"
+                  >
+                    <v-icon>mdi-cancel</v-icon>
+                  </v-btn>
+                </v-list-item-action>
+
             </v-list-item>
           </template>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <!-- Button displayed only if min 1 element displayed -->
-            <v-btn color="#F1C100" text @click="addToList" v-if="resultProducts!=''">Add to your Favs</v-btn>
-          </v-card-actions>
         </v-list-item-group>
       </v-list>
     </v-card>
@@ -57,6 +62,16 @@ export default {
     // function to redirect to other pages
     movePage(path) {
       this.$router.push(path);
+    },
+
+    addToFavs(val){
+      // eslint-disable-next-line no-console
+      console.log(val);
+      this.$store.commit('addFavsList', {nameProduct: val});
+    },
+
+    deleteList(){
+
     }
   }
 }

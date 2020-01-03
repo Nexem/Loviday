@@ -82,10 +82,10 @@
 
                 <v-list-item-action>
                   <v-checkbox
-                    :input-value="active"
-                    :true-value="item"
+                    :value="item"
                     color="green accent-4"
-                    @click="productSelected"
+                    v-model="checkedProduct"
+                    @change="productSelected($event, i)"
                   ></v-checkbox>
                 </v-list-item-action>
               </template>
@@ -148,7 +148,7 @@ export default {
         image_url: '',
         energy_100g: ''
       }
-      // return researchQuery;
+      console.log(researchQuery)
       axios
         // send product code to backend
         // .post('http://localhost:3000/code', { code: '3178530405774' })
@@ -163,16 +163,19 @@ export default {
     //Item selected to be added to user list
     productSelected(val){
       this.productChecked.push(val);
-      // eslint-disable-next-line no-console
-      console.log(val);
     },
 
     //Add products to user list
     addToList() {
-      this.productChecked.forEach(element => {
-        this.$store.commit('addProductToList', {nameProduct: element});
-        // eslint-disable-next-line no-console
-        console.log('item added to list', element);
+      const vm = this
+      var uniqueArray = this.productChecked.filter(function(item, pos, self) {
+          return self.indexOf(item) == pos && pos != null;
+      })
+      
+      uniqueArray.forEach(function(element) {
+        if(element != null)
+          vm.$store.commit('addProductToList', element);
+        //console.log('item added to list', element);
       });
     }
   }
