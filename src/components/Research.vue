@@ -148,7 +148,7 @@ export default {
         image_url: '',
         energy_100g: ''
       }
-      console.log(researchQuery)
+
       axios
         // send product code to backend
         // .post('http://localhost:3000/code', { code: '3178530405774' })

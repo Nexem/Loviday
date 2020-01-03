@@ -35,9 +35,9 @@ app.post('/code', async (req, res) => {
   var element = {
     code: item.code,
     product_name: item.product_name,
-    origins: item.origins.split(','),
-    manufacturing_places: item.manufacturing_places.split(','),
-    ingredients_text: item.ingredients_text.split(','),
+    origins: item.origins,
+    manufacturing_places: item.manufacturing_places,
+    ingredients_text: item.ingredients_text,
     additives_n: item.additives_n,
     additives_tags: item.additives_tags,
     ingredients_from_palm_oil_n: item.ingredients_from_palm_oil_n,
@@ -54,17 +54,48 @@ app.post('/code', async (req, res) => {
 app.post('/search', async (req, res) => {
   console.log('[POST] search')
 
-  const beginurl = 'https://fr.openfoodfacts.org/cgi/search.pl?action=process'
-  const endurl = 'sort_by=unique_scans_n&download=on'
+  const beginUrl = 'https://fr.openfoodfacts.org/cgi/search.pl?action=process'
+  const endUrl = '&sort_by=unique_scans_n&download=on'
   // &nutrition_grades=e
 
   if (req.body.researchQuery !== undefined) {
     const obj = req.body.researchQuery
-    const name = obj.product_name
+    console.log(obj)
 
-    console.log(name)
+    // const name = obj.product_name
+    var request = ''
 
-    const url = `${beginurl}&search_terms=${name}&${endurl}`
+    if (obj.product_name !== '') {
+      request = request.concat('&search_terms=', obj.product_name)
+    }
+
+    if (obj.origins !== '') {
+      request = request.concat('&origins=France')
+    }
+
+    if (obj.nutriscore_score !== '') {
+      request = request.concat('&nutrition_grades=', obj.nutriscore_score.toLowerCase())
+    }
+
+    if (obj.nova_group !== '') {
+      request = request.concat('&nova_groups=', obj.nova_group)
+    }
+
+    if (obj.additives_n === 0) {
+      request = request.concat('&additives=with')
+    }
+
+    if (obj.ingredients_from_palm_oil_n === true) {
+      request = request.concat('&ingredients_from_palm_oil=without')
+    }
+
+    request = request.concat('&countries=France') // indicates that the product is sold in France
+
+    console.log(request)
+
+    // const url = `${beginUrl}&search_terms=${name}&${endUrl}`
+    var url = beginUrl.concat(request, endUrl)
+    console.log('url ! ', url)
 
     const result = await axios({
       method: 'get',
@@ -85,9 +116,9 @@ app.post('/search', async (req, res) => {
           list.push({
             code: item.code,
             product_name: item.product_name,
-            origins: item.origins.split(','),
-            manufacturing_places: item.manufacturing_places.split(','),
-            ingredients_text: item.ingredients_text.split(','),
+            origins: item.origins,
+            manufacturing_places: item.manufacturing_places,
+            ingredients_text: item.ingredients_text,
             additives_n: item.additives_n,
             additives_tags: item.additives_tags,
             ingredients_from_palm_oil_n: item.ingredients_from_palm_oil_n,
@@ -99,7 +130,7 @@ app.post('/search', async (req, res) => {
           })
         }
 
-        console.log(list)
+        // console.log(list)
         res.send(list)
       })
   } else {
