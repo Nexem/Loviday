@@ -1,81 +1,113 @@
 <template>
   <div class="white_background">
-    <v-card color="white">
-      <v-card-title>
-        <span class="research">RESEARCH A PRODUCT</span>
-      </v-card-title>
-      <v-card-text>
-        <v-container>
-          <v-row>
-            <v-col cols="12" sm="6">
-              <v-text-field label="Name of the product"
-                v-model="nameProduct"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12" sm="6">
-              <v-text-field label="Company of the product"
-                v-model="nameCompany"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12">
-              <v-checkbox
-                v-model="palmOil"
-                :label="`Ne contenant pas d'huile de palme`"
-              ></v-checkbox>
-            </v-col>
-            <v-col cols="12">
-              <v-checkbox
-                v-model="origin"
-                :label="`Origine France`"
-              ></v-checkbox>
-            </v-col>
-            <v-col sm="3">
-              <v-select
-                v-model="additives"
-                :items="numberadditivesItems"
-                label="Number of additives"
-              ></v-select>
-            </v-col>
-            <v-col sm="3">
-              <v-select
-                v-model="novascore"
-                :items="novascoreItems"
-                label="Nova Score"
-              ></v-select>
-            </v-col>
-            <v-col sm="3">
-              <v-select
-                v-model="nutriscore"
-                :items="nutriscoreItems"
-                label="Nutriscore"
-              ></v-select>
-            </v-col>
-          </v-row>
-          <small>You can refer many fields at a time</small>
-        </v-container>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="#F1C100" text @click="queryResearch">Research</v-btn>
-      </v-card-actions>
-    </v-card>
+    <!-- Fields for research -->
+      <v-card color="white">
+        <v-card-title>
+          <span class="research">RESEARCH A PRODUCT</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col cols="12" sm="6">
+                <v-text-field label="Name of the product"
+                  v-model="nameProduct"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6">
+                <v-text-field label="Company of the product"
+                  v-model="nameCompany"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-checkbox
+                  v-model="palmOil"
+                  :label="`Do not contain palm oil`"
+                ></v-checkbox>
+              </v-col>
+              <v-col cols="12">
+                <v-checkbox
+                  v-model="origin"
+                  :label="`French origin`"
+                ></v-checkbox>
+              </v-col>
+              <v-col sm="3">
+                <v-select
+                  v-model="additives"
+                  :items="numberadditivesItems"
+                  label="Number of additives"
+                ></v-select>
+              </v-col>
+              <v-col sm="3">
+                <v-select
+                  v-model="novascore"
+                  :items="novascoreItems"
+                  label="Nova Score"
+                ></v-select>
+              </v-col>
+              <v-col sm="3">
+                <v-select
+                  v-model="nutriscore"
+                  :items="nutriscoreItems"
+                  label="Nutriscore"
+                ></v-select>
+              </v-col>
+            </v-row>
+            <small>You can refer many fields at a time</small>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="#F1C100" text @click="queryResearch">Research</v-btn>
+        </v-card-actions>
 
-  </div>
+        <!-- Separation between research andd result -->
+        <v-divider :inset="inset"></v-divider>
+
+        <!-- List of results -->
+        <v-list shaped>
+          <v-list-item-group v-model="model" multiple>
+            <template v-for="(item, i) in resultProducts">
+              <v-divider v-if="!item" :key="`divider-${i}`"></v-divider>
+
+              <v-list-item
+                v-else
+                :key="`item-${i}`"
+                :value="item"
+                active-class="green--text text--accent-4"
+              >
+                <template v-slot:default="{ active, toggle }">
+                  <v-list-item-content>
+                    <v-list-item-title v-text="item"></v-list-item-title>
+                  </v-list-item-content>
+
+                  <v-list-item-action>
+                    <v-checkbox
+                      :input-value="active"
+                      :true-value="item"
+                      color="green accent-4"
+                      @click="toggle"
+                    ></v-checkbox>
+                  </v-list-item-action>
+                </template>
+              </v-list-item>
+            </template>
+          </v-list-item-group>
+        </v-list>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <!-- Button displayed only if min 1 element displayed -->
+          <v-btn color="#F1C100" text @click="addToList" v-if="resultProducts!=''">Add to List</v-btn>
+        </v-card-actions>
+      </v-card>
+
+</div>
+  
 </template>
-
-<style scoped>
-div.white_background {
-  background: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-}
-</style>
 
 <script>
 export default {
   data: () => ({
+    //Research field
     nameProduct: '',
     nameCompany: '',
     palmOil: '',
@@ -83,9 +115,13 @@ export default {
     additives: '',
     novascore: '',
     nutriscore: '',
+    //Lists for itemsLists displayed for research
     novascoreItems: ['1','2','3','4','5'],
     nutriscoreItems: ['A','B','C','E','F'],
-    numberadditivesItems: ['1','2','3','4','5','>5']
+    numberadditivesItems: ['1','2','3','4','5','>5'],
+
+    //List containing the product returned by the API, it's displayed into the List below the research field
+    resultProducts: ["Enter list of products here"]
   }),
 
   methods: {
@@ -95,6 +131,7 @@ export default {
     },
 
     queryResearch(){
+      //Object created
       var researchQuery = {
         code: '',
         product_name: this.nameProduct,
@@ -115,3 +152,14 @@ export default {
   }
 }
 </script>
+
+
+<style scoped>
+  div.white_background {
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+  }
+</style>
