@@ -113,3 +113,12 @@ h3 {
   align-items: center;
 }
 </style>
+
+<script>
+export default {
+  name: "App",
+  data: () => ({
+    email: ''
+  }),
+};
+</script>
