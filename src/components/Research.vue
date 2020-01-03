@@ -103,6 +103,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   data: () => ({
     //Research field
@@ -146,7 +148,16 @@ export default {
         image_url: '',
         energy_100g: ''
       }
-      return researchQuery;
+      // return researchQuery;
+      axios
+        // send product code to backend
+        // .post('http://localhost:3000/code', { code: '3178530405774' })
+        .post('http://localhost:3000/search', { researchQuery })
+        // get product information from backend
+        .then(function (response) {
+          // eslint-disable-next-line no-console
+          console.log(response.data)
+        })
     },
 
     //Item selected to be added to user list
