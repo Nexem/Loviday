@@ -146,7 +146,7 @@ export default {
         image_url: '',
         energy_100g: ''
       }
-      return this.researchQuery;
+      return researchQuery;
     },
 
     //Item selected to be added to user list
