@@ -5,9 +5,12 @@ import VueRouter from 'vue-router'
 import Login from './components/Login.vue'
 import Welcome from './components/Welcome.vue'
 import Research from './components/Research.vue'
+import Lists from './components/Lists.vue'
+import Vuex from 'vuex'
 
 Vue.config.productionTip = false
 Vue.use(VueRouter)
+Vue.use(Vuex)
 
 const router = new VueRouter({
   mode: 'history',
@@ -26,11 +29,63 @@ const router = new VueRouter({
       path: '/Research',
       component: Research,
       name: 'Research'
+    },
+    {
+      path: '/Lists',
+      component: Lists,
+      name: 'Lists'
     }
   ]
 })
+
+const store = new Vuex.Store({
+  state: {
+    user: {
+      email: '',
+      pwd: ''
+    },
+    productList: {
+      nameProduct: ['item1']
+    },
+    favsList: {
+      nameProduct: []
+    }
+  },
+
+  mutations: {
+    authenticate (state, [email, pwd]) {
+      state.user.email = email
+      state.user.pwd = pwd
+      router.push('App')
+    },
+    addProductToList (state, [nameProduct]) {
+      state.productList.nameProduct.push(nameProduct)
+    },
+    addFavsList (state, [nameProduct]) {
+      state.favsList.nameProduct.push(nameProduct)
+    }
+  },
+  getters: {
+    // User getters
+    getEmail: state => {
+      return state.user.email
+    },
+    // Unused
+    getPwd: state => {
+      return state.user.pwd
+    },
+    getProducts: state => {
+      return state.productList.nameProduct
+    },
+    getFavs: state => {
+      return state.favsList.nameProduct
+    }
+  }
+})
+
 new Vue({
   vuetify,
   router,
+  store,
   render: h => h(App)
 }).$mount('#app')
