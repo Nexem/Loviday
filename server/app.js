@@ -60,7 +60,7 @@ app.post('/search', async (req, res) => {
 
   if (req.body.researchQuery !== undefined) {
     const obj = req.body.researchQuery
-    console.log(obj)
+    // console.log(obj)
 
     // const name = obj.product_name
     var request = ''
@@ -91,17 +91,19 @@ app.post('/search', async (req, res) => {
 
     request = request.concat('&countries=France') // indicates that the product is sold in France
 
-    console.log(request)
+    // console.log(request)
 
     // const url = `${beginUrl}&search_terms=${name}&${endUrl}`
     var url = beginUrl.concat(request, endUrl)
-    console.log('url ! ', url)
+    // console.log('url ! ', url)
 
     const result = await axios({
       method: 'get',
       url: url,
       responseType: 'stream'
     })
+
+    // console.log(result.status_verbose)
 
     const results = []
 
@@ -130,8 +132,12 @@ app.post('/search', async (req, res) => {
           })
         }
 
-        // console.log(list)
-        res.send(list)
+        console.log(list.length)
+        if (list.length === 535) {
+          res.send('error')
+        } else {
+          res.send(list)
+        }
       })
   } else {
     res.send('error')
@@ -144,7 +150,7 @@ app.use(function (req, res, next) {
 })
 
 // error handler
-app.use(function (err, req, res, next) {
+app.use(function (err, req, res) {
   // set locals, only providing error in development
   res.locals.message = err.message
   res.locals.error = req.app.get('env') === 'development' ? err : {}
