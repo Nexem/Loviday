@@ -59,51 +59,55 @@
       <v-divider :inset="inset"></v-divider>
 
       <!-- List of results -->
-      <v-list shaped v-if="resultProducts!=''"> 
-        <v-list-item-group v-model="checklistProduct" multiple>
-          <template v-for="(item, i) in resultProductsName.slice(part1,part2)">
-            <v-divider v-if="!item" :key="`divider-${i}`"></v-divider>
+      
 
-            <v-list-item
-              v-else
-              :key="`item-${i}`"
-              :value="item"
-              active-class="green--text text--accent-4"
+      
+        <v-data-table
+          v-model="selected"
+          v-bind:headers="headers"
+          v-bind:items="items"
+          select-all
+          v-bind:pagination.sync="pagination"
+          item-key="name"
+          class="elevation-1"
+        >
+        <template slot="headers" scope="props">
+          <tr>
+            <th>
+              <v-checkbox
+                primary
+                hide-details
+                @click.native="toggleAll"
+                :input-value="props.all"
+                :indeterminate="props.indeterminate"
+              ></v-checkbox>
+            </th>
+            <th v-for="header in props.headers" :key="header.text"
+              :class="['column sortable', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']"
+              @click="changeSort(header.value)"
             >
-              <template v-slot:default="{ active, toggle }">
-                <v-img
-                  :src="resultProductsImage[i]"
-                  max-height="50"
-                  max-width="50"
-                ></v-img>
-                <v-list-item-content>
-                  <v-list-item-title v-text="item"></v-list-item-title>
-                  <v-icon>alpha-a-circle-outline</v-icon>
-                </v-list-item-content>
-
-                <v-list-item-action>
-                  <v-checkbox
-                    :value="item"
-                    color="green accent-4"
-                    v-model="checkedProduct"
-                    @change="productSelected($event, i)"
-                  ></v-checkbox>
-                </v-list-item-action>
-              </template>
-            </v-list-item>
-          </template>
-          <v-spacer></v-spacer>
-          <v-btn color="#F1C100" text v-if="part1 != 0" @@click="part1 -= 15, part2 -= 15">show previous</v-btn> 
-          <v-btn color="#F1C100" text @@click="part2 += 15, part1 += 15">show next</v-btn> 
-          
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <!-- Button displayed only if min 1 element displayed -->
-            <v-btn color="#F1C100" text @click="addToList">Add to List</v-btn>
-            <v-btn color="#F1C100" text @click="addToFavorite">Add to Favorite</v-btn>
-          </v-card-actions>
-        </v-list-item-group>
-      </v-list>
+              <v-icon>arrow_upward</v-icon>
+              {{ header.text }}
+            </th>
+          </tr>
+        </template>
+        <template slot="items" scope="props">
+          <tr :active="props.selected" @click="props.selected = !props.selected">
+            <td>
+              <v-checkbox
+                primary
+                hide-details
+                :input-value="props.selected"
+              ></v-checkbox>
+            </td> 
+            <td class="text-xs-right">{{ props.item.product_name }}</td>
+            <td class="text-xs-right">{{ props.item.nova_group }}</td>
+            <td class="text-xs-right">{{ props.item.nutriscore_score }}</td>
+            <td class="text-xs-right">{{ props.item.additives_n }}</td>
+          </tr>
+        </template>
+      </v-data-table>
+      
     </v-card>
   </div>
 </template>
@@ -115,7 +119,6 @@ export default {
   data: () => ({
     //Research field
     nameProduct: '',
-    nameCompany: '',
     palmOil: '',
     origin: '',
     additives: '',
@@ -133,7 +136,26 @@ export default {
     productChecked: [],
 
     part1: 0,
-    part2: 15
+    part2: 15,
+
+    
+    pagination: {
+      sortBy: 'name'
+    },
+    selected: [],
+    headers: [
+      {
+        text: 'Image of product',
+        align: 'left',
+        value: 'image_url'
+      },
+      { text: 'Name', value: 'product_name' },
+      { text: 'NovaScore', value: 'nova_group' },
+      { text: 'NutriScore', value: 'nutriscore_grade' },
+      { text: 'Number of additives', value: 'additives_n' }
+    ],
+    items: []
+
   }),
 
   methods: {
@@ -142,11 +164,38 @@ export default {
       this.$router.push(path);
     },
 
+    // showmore(){
+    //   this.part2 += 15
+    //   this.part1 += 15
+    // },
+
+    // showless(){
+    //   this.part1 -= 15
+    //   this.part2 -= 15
+    // },
+    resolve_img_url(path) {
+      console.log(path)
+      return path
+    },
+
+    toggleAll () {
+      if (this.selected.length) this.selected = []
+      else this.selected = this.items.slice()
+    },
+    changeSort (column) {
+      if (this.pagination.sortBy === column) {
+        this.pagination.descending = !this.pagination.descending
+      } else {
+        this.pagination.sortBy = column
+        this.pagination.descending = false
+      }
+    },
+
     queryResearch(){
       const vm = this
-      vm.resultProductsName=[]
-      vm.resultProductsImage=[]
-      vm.resultProductsNova=[]
+      // vm.resultProductsName=[]
+      // vm.resultProductsImage=[]
+      // vm.resultProductsNova=[]
       //Object created
       var researchQuery = {
         code: '',
@@ -166,7 +215,6 @@ export default {
 
       axios
         // send product code to backend
-        // .post('http://localhost:3000/code', { code: '3178530405774' })
         .post('http://localhost:3000/search', { researchQuery })
         // get product information from backend
         .then(function (response) {
@@ -175,12 +223,22 @@ export default {
           // var result
           response.data.forEach(function(element) {
             // console.log("okok")
-            vm.resultProductsName.push(element.product_name)
-            vm.resultProductsImage.push(element.image_url)
-            vm.resultProductsNova.push(element.nova_group)
+            // vm.resultProductsName.push(element.product_name)
+            // vm.resultProductsImage.push(element.image_url)
+            // vm.resultProductsNova.push(element.nova_group)
+            var itemInsert = {
+              image_url: element.image_url,
+              product_name: element.product_name,
+              nova_group: element.nova_group,
+              nutriscore_grade: element.nutriscore_grade,
+              additives_n: element.additives_n
+            }
+            vm.items.push(itemInsert)
           })
+          //console.log(vm.items)
         })
     },
+
 
     //Item selected to be added to user list
     productSelected(val){
