@@ -58,64 +58,70 @@
       <!-- Separation between research andd result -->
       <v-divider :inset="inset"></v-divider>
 
-      <!-- List of results -->
-      
-          
-          <v-simple-table 
-            shaped v-if="resultProducts!=''" 
-            v-bind:pagination.sync="pagination"
-            >
-            <template v-slot:default>
-              <thead>
-                <tr>
-                  <th class="text-left">Image of product</th>
-                  <th class="text-left">Name</th>
-                  <th class="text-left">Nova score</th>
-                  <th class="text-left">Nutri score</th>
-                  <th class="text-left">Number of additives</th>
-                  <th class="text-left">Select</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="item in resultProducts.slice(part1,part2)" :key="item.product_name">
-                  <td><v-img
-                      :src="item.image_url"
-                      max-height="50"
-                      max-width="50"
-                    ></v-img>
-                  </td>
-                  <td>{{ item.product_name }}</td>
-                  <td>{{ item.nova_group }}</td>
-                  <td>{{ item.nutriscore_grade }}</td>
-                  <td>{{ item.additives_n }}</td>
-                  <td> <v-checkbox
-                      :value="item"
-                      :checked="false"
-                      name="checkboxe"
-                      color="green accent-4"
-                      @change="productSelected($event, i)"
-                    ></v-checkbox> </td>
-                </tr>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                    <!-- Button to display nexts products -->
-                    <v-btn color="#F1C100" text v-if="part1 != 0" @click="showless">show previous</v-btn> 
-                    <v-btn color="#F1C100" text v-if="resultProductsName!=''" @click="showmore">show next</v-btn> 
-                </v-card-actions>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <!-- Button displayed only if min 1 element displayed -->
-                  <v-btn color="#F1C100" text @click="addToList">Add to List</v-btn>
-                  <v-btn color="#F1C100" text @click="addToFavorite">Add to Favorite</v-btn>
-                </v-card-actions>
-              </tbody>
-            </template>
+      <v-dialog v-model="loading" fullscreen full-width>
+        <v-container fluid fill-height style="background-color: rgba(255, 255, 255, 0.5);">
+          <v-layout justify-center align-center>
+            <v-progress-circular
+              indeterminate
+              :width="3"
+              color="amber">
+            </v-progress-circular>
+          </v-layout>
+        </v-container>
+      </v-dialog>
 
-            
-          </v-simple-table>
-          
-          
-    
+
+      <!-- List of results -->          
+      <v-simple-table 
+        shaped v-if="resultProducts!=''" 
+        v-bind:pagination.sync="pagination"
+        >
+        <template v-slot:default>
+          <thead>
+            <tr>
+              <th class="text-left">Image of product</th>
+              <th class="text-left">Name</th>
+              <th class="text-left">Nova score</th>
+              <th class="text-left">Nutri score</th>
+              <th class="text-left">Number of additives</th>
+              <th class="text-left">Select</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="item in resultProducts.slice(part1,part2)" :key="item.product_name">
+              <td><v-img
+                  :src="item.image_url"
+                  max-height="50"
+                  max-width="50"
+                ></v-img>
+              </td>
+              <td>{{ item.product_name }}</td>
+              <td>{{ item.nova_group }}</td>
+              <td>{{ item.nutriscore_grade }}</td>
+              <td>{{ item.additives_n }}</td>
+              <td> <v-checkbox
+                  :value="item"
+                  :checked="false"
+                  name="checkboxe"
+                  color="green accent-4"
+                  @change="productSelected($event, i)"
+                ></v-checkbox> </td>
+            </tr>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+                <!-- Button to display nexts products -->
+                <v-btn color="#F1C100" text v-if="part1 != 0" @click="showless">show previous</v-btn> 
+                <v-btn color="#F1C100" text v-if="resultProductsName!=''" @click="showmore">show next</v-btn> 
+            </v-card-actions>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <!-- Button displayed only if min 1 element displayed -->
+              <v-btn color="#F1C100" text @click="addToList">Add to List</v-btn>
+              <v-btn color="#F1C100" text @click="addToFavorite">Add to Favorite</v-btn>
+            </v-card-actions>
+          </tbody>
+        </template>
+      </v-simple-table>
     </v-card>
   </div>
 </template>
@@ -125,6 +131,7 @@ import axios from 'axios'
 
 export default {
   data: () => ({
+    loading: false,
     //Research field
     nameProduct: '',
     palmOil: '',
@@ -176,6 +183,7 @@ export default {
     },
 
     queryResearch(){
+      this.loading = true
       const vm = this
       //Reset tab for new query
       vm.resultProducts=[]
@@ -202,6 +210,7 @@ export default {
         .post('http://localhost:3000/search', { researchQuery })
         // get product information from backend
         .then(function (response) {
+          vm.loading = false
           // var result
           response.data.forEach(function(element) {
             vm.resultProducts.push(element)
