@@ -15,7 +15,7 @@
               :value="item"
             >
                 <v-list-item-content>
-                  <v-list-item-title v-text="item"></v-list-item-title>
+                  <v-list-item-title v-text="item.product_name"></v-list-item-title>
                 </v-list-item-content>
 
                 <v-list-item-action>

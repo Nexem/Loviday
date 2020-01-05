@@ -60,55 +60,62 @@
 
       <!-- List of results -->
       
-        <v-list shaped v-if="resultProducts!=''"> 
-          <v-list-item-group v-model="checklistProduct" multiple>
-            <template v-for="(item, i) in resultProductsName.slice(part1,part2)">
-              <v-divider v-if="!item" :key="`divider-${i}`"></v-divider>
-
-              <v-list-item
-                v-else
-                :key="`item-${i}`"
-                :value="item"
-                active-class="green--text text--accent-4"
-              >
-                <template v-slot:default="{ active, toggle }">
-                  <v-img
-                    :src="resultProductsImage[i]"
-                    max-height="50"
-                    max-width="50"
-                  ></v-img>
-                  <v-list-item-content>
-                    <v-list-item-title v-text="item"></v-list-item-title>
-                    <v-icon>alpha-a-circle-outline</v-icon>
-                  </v-list-item-content>
-
-                  <v-list-item-action>
-                    <v-checkbox
+          
+          <v-simple-table 
+            shaped v-if="resultProducts!=''" 
+            v-bind:pagination.sync="pagination"
+            >
+            <template v-slot:default>
+              <thead>
+                <tr>
+                  <th class="text-left">Image of product</th>
+                  <th class="text-left">Name</th>
+                  <th class="text-left">Nova score</th>
+                  <th class="text-left">Nutri score</th>
+                  <th class="text-left">Number of additives</th>
+                  <th class="text-left">Select</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item in resultProducts.slice(part1,part2)" :key="item.product_name">
+                  <td><v-img
+                      :src="item.image_url"
+                      max-height="50"
+                      max-width="50"
+                    ></v-img>
+                  </td>
+                  <td>{{ item.product_name }}</td>
+                  <td>{{ item.nova_group }}</td>
+                  <td>{{ item.nutriscore_grade }}</td>
+                  <td>{{ item.additives_n }}</td>
+                  <td> <v-checkbox
                       :value="item"
                       :checked="false"
                       name="checkboxe"
                       color="green accent-4"
                       @change="productSelected($event, i)"
-                    ></v-checkbox>
-                  </v-list-item-action>
-                </template>
-              </v-list-item>
+                    ></v-checkbox> </td>
+                </tr>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                    <!-- Button to display nexts products -->
+                    <v-btn color="#F1C100" text v-if="part1 != 0" @click="showless">show previous</v-btn> 
+                    <v-btn color="#F1C100" text v-if="resultProductsName!=''" @click="showmore">show next</v-btn> 
+                </v-card-actions>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <!-- Button displayed only if min 1 element displayed -->
+                  <v-btn color="#F1C100" text @click="addToList">Add to List</v-btn>
+                  <v-btn color="#F1C100" text @click="addToFavorite">Add to Favorite</v-btn>
+                </v-card-actions>
+              </tbody>
             </template>
-            <v-card-actions>
-            <v-spacer></v-spacer>
-              <!-- Button to display nexts products -->
-              <v-btn color="#F1C100" text v-if="part1 != 0" @click="showless">show previous</v-btn> 
-              <v-btn color="#F1C100" text v-if="resultProductsName!=''" @click="showmore">show next</v-btn> 
-            </v-card-actions>
+
             
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <!-- Button displayed only if min 1 element displayed -->
-              <v-btn color="#F1C100" text @click="addToList">Add to List</v-btn>
-              <v-btn color="#F1C100" text @click="addToFavorite">Add to Favorite</v-btn>
-            </v-card-actions>
-          </v-list-item-group>
-        </v-list>
+          </v-simple-table>
+          
+          
+    
     </v-card>
   </div>
 </template>
@@ -131,14 +138,12 @@ export default {
     numberadditivesItems: ['1','2','3','4','5','>5'],
 
     //List containing the product returned by the API, it's displayed into the List below the research field
-    resultProductsName: [],
-    resultProductsNova: [],
-    resultProductsImage: [],
+    resultProducts: [],
+
     productChecked: [],
 
     part1: 0,
     part2: 15,
-
   }),
 
   methods: {
@@ -172,9 +177,9 @@ export default {
 
     queryResearch(){
       const vm = this
-      // vm.resultProductsName=[]
-      // vm.resultProductsImage=[]
-      // vm.resultProductsNova=[]
+      //Reset tab for new query
+      vm.resultProducts=[]
+
       //Object created
       var researchQuery = {
         code: '',
@@ -199,10 +204,9 @@ export default {
         .then(function (response) {
           // var result
           response.data.forEach(function(element) {
-            vm.resultProductsName.push(element.product_name)
-            vm.resultProductsImage.push(element.image_url)
-            vm.resultProductsNova.push(element.nova_group)
+            vm.resultProducts.push(element)
           })
+          console.log(vm.resultProducts)
         })
     },
 
