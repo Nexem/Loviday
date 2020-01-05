@@ -3,7 +3,9 @@
     <v-row>
       <v-col></v-col>
       <v-col style="background-color: floralwhite">
-        <h3>LOVIDAY</h3>
+        <v-card-title>
+          <span class="register">CONNEXION</span>
+        </v-card-title>
         <v-card-text>
           <v-form>
             <v-text-field
@@ -30,13 +32,13 @@
               @click:append="show1 = !show1"
             ></v-text-field>
             <v-card-actions>
-              <v-btn @click="checkForm" color="grey" class="white--text">CONNECTION</v-btn>
+              <v-btn @click="connect" color="#F1C100" text>CONNEXION</v-btn>
               <v-spacer></v-spacer>
 
               <!-- dialog for registration -->
               <v-dialog v-model="Register" max-width="600px" style="background-color: floralwhite">
                 <template v-slot:activator="{ on }">
-                  <v-btn color="grey" class="white--text" dark v-on="on">REGISTRATION</v-btn>
+                  <v-btn color="#F1C100" text dark v-on="on">REGISTRATION</v-btn>
                 </template>
                 <v-card>
                   <v-card-title>
@@ -63,8 +65,7 @@
                   </v-card-text>
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="grey" text @click="dialog = false">Close</v-btn>
-                    <v-btn color="grey" text @click="dialog = false">Save</v-btn>
+                    <v-btn color="#F1C100" text @click='register'>Save</v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
@@ -94,7 +95,7 @@ div.carre {
 }
 
 span.register {
-  color: grey;
+  color: #f1c100;
   font-family: "Source Sans Pro", sans-serif;
   font-size: 25px;
   margin-bottom: 0.5rm;

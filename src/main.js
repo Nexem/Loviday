@@ -47,8 +47,10 @@ const router = new VueRouter({
 const store = new Vuex.Store({
   state: {
     user: {
-      email: '',
-      pwd: ''
+      firstname: null,
+      lastname: null,
+      email: null,
+      pwd: null
     },
     productList: {
       nameProduct: ['item1', 'item2']
@@ -63,6 +65,21 @@ const store = new Vuex.Store({
       state.user.email = email
       state.user.pwd = pwd
       router.push('App')
+    },
+    connect (state, { email, pwd }) {
+      state.user.email = email
+      state.user.pwd = pwd
+    },
+    disconnect (state) {
+      state.user.email = null
+      state.user.pwd = null
+      router.push('App')
+    },
+    register (state, { firstname, lastname, email, pwd }) {
+      state.user.firstname = firstname
+      state.user.lastname = lastname
+      state.user.email = email
+      state.user.pwd = pwd
     },
     addProductToList (state, nameProduct) {
       state.productList.nameProduct.push(nameProduct)
