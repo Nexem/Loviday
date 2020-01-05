@@ -9,6 +9,7 @@
       >
         <v-btn
           style="height: 300px; opacity: 0.85;"
+          width="200"
           color = "#373737"
           class="white--text"
           block
@@ -20,6 +21,7 @@
       >
         <v-btn
           style="height: 300px; opacity: 0.85;"
+          width="200"
           color = "#373737"
           class="white--text"
           block
@@ -31,6 +33,7 @@
       >
         <v-btn
           style="height: 300px; opacity: 0.85;"
+          width="200"
           color = "#373737"
           class="white--text"
           block
@@ -48,6 +51,7 @@
 
 div.background {
   background-image: url("background.jpg");
+  background-size: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -86,10 +90,7 @@ export default {
         .post('http://localhost:3000/search')
         // get product information from backend
         .then(function (response) {
-          // eslint-disable-next-line no-console
-          console.log('hey')
-          // eslint-disable-next-line no-console
-          console.log(response.data)
+          console.log(response)
         })
     }
 }

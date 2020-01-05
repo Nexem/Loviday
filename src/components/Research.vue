@@ -13,11 +13,6 @@
                 v-model="nameProduct"
               ></v-text-field>
             </v-col>
-            <v-col cols="12" sm="6">
-              <v-text-field label="Company of the product"
-                v-model="nameCompany"
-              ></v-text-field>
-            </v-col>
             <v-col cols="12">
               <v-checkbox
                 v-model="palmOil"

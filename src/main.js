@@ -64,6 +64,11 @@ const store = new Vuex.Store({
       state.user.pwd = pwd
       router.push('App')
     },
+    logout (state) {
+      state.user.email = ''
+      state.user.pwd = ''
+      router.push('App')
+    },
     addProductToList (state, nameProduct) {
       state.productList.nameProduct.push(nameProduct)
     },
