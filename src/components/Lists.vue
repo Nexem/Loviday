@@ -20,10 +20,10 @@
 
                 <v-list-item-action>
                   <v-btn
-                    :input-value="active"
-                    :true-value="item"
+                    :value="item"
+                    v-model="favProduct"
                     text icon color="blue lighten-2"
-                    @click="addToFavs(item)"
+                    @click="addToFavs($event, i)"
                   >
                     <v-icon>mdi-heart-outline</v-icon>
                   </v-btn> 
@@ -31,10 +31,10 @@
                 
                 <v-list-item-action>
                   <v-btn
-                    :input-value="active"
-                    :true-value="item"
+                    :value="item"
+                    v-model="deleteProduct"
                     text icon color="red"
-                    @click="deleteList"
+                    @click="deleteList($event,i)"
                   >
                     <v-icon>mdi-cancel</v-icon>
                   </v-btn>
@@ -66,8 +66,8 @@ export default {
 
     addToFavs(val){
       // eslint-disable-next-line no-console
-      console.log(val);
-      this.$store.commit('addFavsList', {nameProduct: val});
+      console.log(val)
+      // this.$store.commit('addFavsList', val)
     },
 
     deleteList(){

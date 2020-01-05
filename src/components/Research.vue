@@ -13,11 +13,6 @@
                 v-model="nameProduct"
               ></v-text-field>
             </v-col>
-            <v-col cols="12" sm="6">
-              <v-text-field label="Company of the product"
-                v-model="nameCompany"
-              ></v-text-field>
-            </v-col>
             <v-col cols="12">
               <v-checkbox
                 v-model="palmOil"
@@ -64,9 +59,9 @@
       <v-divider :inset="inset"></v-divider>
 
       <!-- List of results -->
-      <v-list shaped>
+      <v-list shaped v-if="resultProducts!=''"> 
         <v-list-item-group v-model="checklistProduct" multiple>
-          <template v-for="(item, i) in resultProducts">
+          <template v-for="(item, i) in resultProductsName.slice(part1,part2)">
             <v-divider v-if="!item" :key="`divider-${i}`"></v-divider>
 
             <v-list-item
@@ -76,8 +71,14 @@
               active-class="green--text text--accent-4"
             >
               <template v-slot:default="{ active, toggle }">
+                <v-img
+                  :src="resultProductsImage[i]"
+                  max-height="50"
+                  max-width="50"
+                ></v-img>
                 <v-list-item-content>
                   <v-list-item-title v-text="item"></v-list-item-title>
+                  <v-icon>alpha-a-circle-outline</v-icon>
                 </v-list-item-content>
 
                 <v-list-item-action>
@@ -91,10 +92,15 @@
               </template>
             </v-list-item>
           </template>
+          <v-spacer></v-spacer>
+          <v-btn color="#F1C100" text v-if="part1 != 0" @@click="part1 -= 15, part2 -= 15">show previous</v-btn> 
+          <v-btn color="#F1C100" text @@click="part2 += 15, part1 += 15">show next</v-btn> 
+          
           <v-card-actions>
             <v-spacer></v-spacer>
             <!-- Button displayed only if min 1 element displayed -->
-            <v-btn color="#F1C100" text @click="addToList" v-if="resultProducts!=''">Add to List</v-btn>
+            <v-btn color="#F1C100" text @click="addToList">Add to List</v-btn>
+            <v-btn color="#F1C100" text @click="addToFavorite">Add to Favorite</v-btn>
           </v-card-actions>
         </v-list-item-group>
       </v-list>
@@ -121,8 +127,13 @@ export default {
     numberadditivesItems: ['1','2','3','4','5','>5'],
 
     //List containing the product returned by the API, it's displayed into the List below the research field
-    resultProducts: ["Enter list of products here", "Product2", "Product3", "Product4"],
-    productChecked: []
+    resultProductsName: [],
+    resultProductsNova: [],
+    resultProductsImage: [],
+    productChecked: [],
+
+    part1: 0,
+    part2: 15
   }),
 
   methods: {
@@ -132,6 +143,10 @@ export default {
     },
 
     queryResearch(){
+      const vm = this
+      vm.resultProductsName=[]
+      vm.resultProductsImage=[]
+      vm.resultProductsNova=[]
       //Object created
       var researchQuery = {
         code: '',
@@ -155,8 +170,15 @@ export default {
         .post('http://localhost:3000/search', { researchQuery })
         // get product information from backend
         .then(function (response) {
-          // eslint-disable-next-line no-console
-          console.log(response.data)
+          // console.log(response.data[1].product_name)
+          
+          // var result
+          response.data.forEach(function(element) {
+            // console.log("okok")
+            vm.resultProductsName.push(element.product_name)
+            vm.resultProductsImage.push(element.image_url)
+            vm.resultProductsNova.push(element.nova_group)
+          })
         })
     },
 
@@ -167,6 +189,7 @@ export default {
 
     //Add products to user list
     addToList() {
+
       const vm = this
       var uniqueArray = this.productChecked.filter(function(item, pos, self) {
           return self.indexOf(item) == pos && pos != null;
@@ -175,7 +198,6 @@ export default {
       uniqueArray.forEach(function(element) {
         if(element != null)
           vm.$store.commit('addProductToList', element);
-        //console.log('item added to list', element);
       });
     }
   }
