@@ -61,7 +61,7 @@
       <!-- List of results -->
       <v-list shaped v-if="resultProducts!=''"> 
         <v-list-item-group v-model="checklistProduct" multiple>
-          <template v-for="(item, i) in resultProductsName">
+          <template v-for="(item, i) in resultProductsName.slice(part1,part2)">
             <v-divider v-if="!item" :key="`divider-${i}`"></v-divider>
 
             <v-list-item
@@ -92,6 +92,10 @@
               </template>
             </v-list-item>
           </template>
+          <v-spacer></v-spacer>
+          <v-btn color="#F1C100" text v-if="part1 != 0" @@click="part1 -= 15, part2 -= 15">show previous</v-btn> 
+          <v-btn color="#F1C100" text @@click="part2 += 15, part1 += 15">show next</v-btn> 
+          
           <v-card-actions>
             <v-spacer></v-spacer>
             <!-- Button displayed only if min 1 element displayed -->
@@ -126,7 +130,10 @@ export default {
     resultProductsName: [],
     resultProductsNova: [],
     resultProductsImage: [],
-    productChecked: []
+    productChecked: [],
+
+    part1: 0,
+    part2: 15
   }),
 
   methods: {
