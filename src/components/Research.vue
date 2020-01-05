@@ -58,68 +58,57 @@
       <!-- Separation between research andd result -->
       <v-divider :inset="inset"></v-divider>
 
-      <v-dialog v-model="loading" fullscreen full-width>
-        <v-container fluid fill-height style="background-color: rgba(255, 255, 255, 0.5);">
-          <v-layout justify-center align-center>
-            <v-progress-circular
-              indeterminate
-              :width="3"
-              color="amber">
-            </v-progress-circular>
-          </v-layout>
-        </v-container>
-      </v-dialog>
-
       <!-- List of results -->
       
+        <v-list shaped v-if="resultProducts!=''"> 
+          <v-list-item-group v-model="checklistProduct" multiple>
+            <template v-for="(item, i) in resultProductsName.slice(part1,part2)">
+              <v-divider v-if="!item" :key="`divider-${i}`"></v-divider>
 
-      
-        <v-data-table
-          v-model="selected"
-          v-bind:headers="headers"
-          v-bind:items="items"
-          select-all
-          v-bind:pagination.sync="pagination"
-          item-key="name"
-          class="elevation-1"
-        >
-        <template slot="headers" scope="props">
-          <tr>
-            <th>
-              <v-checkbox
-                primary
-                hide-details
-                @click.native="toggleAll"
-                :input-value="props.all"
-                :indeterminate="props.indeterminate"
-              ></v-checkbox>
-            </th>
-            <th v-for="header in props.headers" :key="header.text"
-              :class="['column sortable', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']"
-              @click="changeSort(header.value)"
-            >
-              <v-icon>arrow_upward</v-icon>
-              {{ header.text }}
-            </th>
-          </tr>
-        </template>
-        <template slot="items" scope="props">
-          <tr :active="props.selected" @click="props.selected = !props.selected">
-            <td>
-              <v-checkbox
-                primary
-                hide-details
-                :input-value="props.selected"
-              ></v-checkbox>
-            </td> 
-            <td class="text-xs-right">{{ props.item.product_name }}</td>
-            <td class="text-xs-right">{{ props.item.nova_group }}</td>
-            <td class="text-xs-right">{{ props.item.nutriscore_score }}</td>
-            <td class="text-xs-right">{{ props.item.additives_n }}</td>
-          </tr>
-        </template>
-      </v-data-table>
-      
+              <v-list-item
+                v-else
+                :key="`item-${i}`"
+                :value="item"
+                active-class="green--text text--accent-4"
+              >
+                <template v-slot:default="{ active, toggle }">
+                  <v-img
+                    :src="resultProductsImage[i]"
+                    max-height="50"
+                    max-width="50"
+                  ></v-img>
+                  <v-list-item-content>
+                    <v-list-item-title v-text="item"></v-list-item-title>
+                    <v-icon>alpha-a-circle-outline</v-icon>
+                  </v-list-item-content>
+
+                  <v-list-item-action>
+                    <v-checkbox
+                      :value="item"
+                      :checked="false"
+                      name="checkboxe"
+                      color="green accent-4"
+                      @change="productSelected($event, i)"
+                    ></v-checkbox>
+                  </v-list-item-action>
+                </template>
+              </v-list-item>
+            </template>
+            <v-card-actions>
+            <v-spacer></v-spacer>
+              <!-- Button to display nexts products -->
+              <v-btn color="#F1C100" text v-if="part1 != 0" @click="showless">show previous</v-btn> 
+              <v-btn color="#F1C100" text v-if="resultProductsName!=''" @click="showmore">show next</v-btn> 
+            </v-card-actions>
+            
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <!-- Button displayed only if min 1 element displayed -->
+              <v-btn color="#F1C100" text @click="addToList">Add to List</v-btn>
+              <v-btn color="#F1C100" text @click="addToFavorite">Add to Favorite</v-btn>
+            </v-card-actions>
+          </v-list-item-group>
+        </v-list>
     </v-card>
   </div>
 </template>
@@ -129,7 +118,6 @@ import axios from 'axios'
 
 export default {
   data: () => ({
-    loading: false,
     //Research field
     nameProduct: '',
     palmOil: '',
@@ -151,24 +139,6 @@ export default {
     part1: 0,
     part2: 15,
 
-    
-    pagination: {
-      sortBy: 'name'
-    },
-    selected: [],
-    headers: [
-      {
-        text: 'Image of product',
-        align: 'left',
-        value: 'image_url'
-      },
-      { text: 'Name', value: 'product_name' },
-      { text: 'NovaScore', value: 'nova_group' },
-      { text: 'NutriScore', value: 'nutriscore_grade' },
-      { text: 'Number of additives', value: 'additives_n' }
-    ],
-    items: []
-
   }),
 
   methods: {
@@ -177,18 +147,14 @@ export default {
       this.$router.push(path);
     },
 
-    // showmore(){
-    //   this.part2 += 15
-    //   this.part1 += 15
-    // },
+    showmore(){
+      this.part2 += 15
+      this.part1 += 15
+    },
 
-    // showless(){
-    //   this.part1 -= 15
-    //   this.part2 -= 15
-    // },
-    resolve_img_url(path) {
-      console.log(path)
-      return path
+    showless(){
+      this.part1 -= 15
+      this.part2 -= 15
     },
 
     toggleAll () {
@@ -205,7 +171,6 @@ export default {
     },
 
     queryResearch(){
-      this.loading = true
       const vm = this
       // vm.resultProductsName=[]
       // vm.resultProductsImage=[]
@@ -232,25 +197,12 @@ export default {
         .post('http://localhost:3000/search', { researchQuery })
         // get product information from backend
         .then(function (response) {
-          // console.log(response.data[1].product_name)
-          
           // var result
-          vm.loading = false
           response.data.forEach(function(element) {
-            // console.log("okok")
-            // vm.resultProductsName.push(element.product_name)
-            // vm.resultProductsImage.push(element.image_url)
-            // vm.resultProductsNova.push(element.nova_group)
-            var itemInsert = {
-              image_url: element.image_url,
-              product_name: element.product_name,
-              nova_group: element.nova_group,
-              nutriscore_grade: element.nutriscore_grade,
-              additives_n: element.additives_n
-            }
-            vm.items.push(itemInsert)
+            vm.resultProductsName.push(element.product_name)
+            vm.resultProductsImage.push(element.image_url)
+            vm.resultProductsNova.push(element.nova_group)
           })
-          //console.log(vm.items)
         })
     },
 
