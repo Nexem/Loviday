@@ -58,6 +58,18 @@
       <!-- Separation between research andd result -->
       <v-divider :inset="inset"></v-divider>
 
+      <v-dialog v-model="loading" fullscreen full-width>
+        <v-container fluid fill-height style="background-color: rgba(255, 255, 255, 0.5);">
+          <v-layout justify-center align-center>
+            <v-progress-circular
+              indeterminate
+              :width="3"
+              color="amber">
+            </v-progress-circular>
+          </v-layout>
+        </v-container>
+      </v-dialog>
+
       <!-- List of results -->
       
 
@@ -117,6 +129,7 @@ import axios from 'axios'
 
 export default {
   data: () => ({
+    loading: false,
     //Research field
     nameProduct: '',
     palmOil: '',
@@ -192,6 +205,7 @@ export default {
     },
 
     queryResearch(){
+      this.loading = true
       const vm = this
       // vm.resultProductsName=[]
       // vm.resultProductsImage=[]
@@ -221,6 +235,7 @@ export default {
           // console.log(response.data[1].product_name)
           
           // var result
+          vm.loading = false
           response.data.forEach(function(element) {
             // console.log("okok")
             // vm.resultProductsName.push(element.product_name)
