@@ -16,7 +16,7 @@
             <v-col cols="12">
               <v-checkbox
                 v-model="palmOil"
-                :label="`Do not contain palm oil`"
+                :label="`Do not contain palm oil ?`"
               ></v-checkbox>
             </v-col>
             <v-col cols="12">
@@ -26,11 +26,10 @@
               ></v-checkbox>
             </v-col>
             <v-col sm="3">
-              <v-select
+              <v-checkbox
                 v-model="additives"
-                :items="numberadditivesItems"
-                label="Number of additives"
-              ></v-select>
+                label="Additives in the product ?"
+              ></v-checkbox>
             </v-col>
             <v-col sm="3">
               <v-select
@@ -74,7 +73,6 @@
       <!-- List of results -->          
       <v-simple-table 
         shaped v-if="resultProducts!=''" 
-        v-bind:pagination.sync="pagination"
         >
         <template v-slot:default>
           <thead>
@@ -88,7 +86,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="item in resultProducts.slice(part1,part2)" :key="item.product_name">
+            <tr v-for="(item,i) in resultProducts.slice(part1,part2)" :key="item.product_name">
               <td><v-img
                   :src="item.image_url"
                   max-height="50"
@@ -108,16 +106,17 @@
                 ></v-checkbox> </td>
             </tr>
             <v-card-actions>
-              <v-spacer></v-spacer>
+              
                 <!-- Button to display nexts products -->
                 <v-btn color="#F1C100" text v-if="part1 != 0" @click="showless">show previous</v-btn> 
                 <v-btn color="#F1C100" text v-if="resultProductsName!=''" @click="showmore">show next</v-btn> 
+                <small>Number of results : {{numberProductReturned}}</small>
             </v-card-actions>
             <v-card-actions>
-              <v-spacer></v-spacer>
+              
               <!-- Button displayed only if min 1 element displayed -->
               <v-btn color="#F1C100" text @click="addToList">Add to List</v-btn>
-              <v-btn color="#F1C100" text @click="addToFavorite">Add to Favorite</v-btn>
+              <v-btn color="#F1C100" text @click="addToFavs">Add to Favorite</v-btn>
             </v-card-actions>
           </tbody>
         </template>
@@ -142,10 +141,10 @@ export default {
     //Lists for itemsLists displayed for research
     novascoreItems: ['1','2','3','4','5'],
     nutriscoreItems: ['A','B','C','E','F'],
-    numberadditivesItems: ['1','2','3','4','5','>5'],
 
     //List containing the product returned by the API, it's displayed into the List below the research field
     resultProducts: [],
+    numberProductReturned: '',
 
     productChecked: [],
 
@@ -215,7 +214,7 @@ export default {
           response.data.forEach(function(element) {
             vm.resultProducts.push(element)
           })
-          console.log(vm.resultProducts)
+          vm.numberProductReturned = vm.resultProducts.length
         })
     },
 
@@ -236,6 +235,20 @@ export default {
       uniqueArray.forEach(function(element) {
         if(element != null)
           vm.$store.commit('addProductToList', element);
+        console.log(element)
+      });
+    },
+
+    addToFavs() {
+      const vm = this
+      var uniqueArray = this.productChecked.filter(function(item, pos, self) {
+          return self.indexOf(item) == pos && pos != null;
+      })
+      
+      uniqueArray.forEach(function(element) {
+        if(element != null)
+          vm.$store.commit('addFavsList', element);
+        console.log(element)
       });
     }
   }
@@ -245,7 +258,7 @@ export default {
 
 <style scoped>
   div.white_background {
-    background: white;
+    background: lightgray;
     display: flex;
     align-items: center;
     justify-content: center;
