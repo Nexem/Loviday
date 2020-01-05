@@ -103,7 +103,7 @@ app.post('/search', async (req, res) => {
       responseType: 'stream'
     })
 
-    // console.log(result.status_verbose)
+    // console.log(result)
 
     const results = []
 
@@ -112,6 +112,7 @@ app.post('/search', async (req, res) => {
     result.data.pipe(csv({ separator: '\t' }))
       .on('data', (data) => results.push(data))
       .on('end', () => {
+        console.log(results.length, 'results')
         for (var i = 0; i < results.length; i++) {
           var item = results[i]
 
@@ -132,7 +133,8 @@ app.post('/search', async (req, res) => {
           })
         }
 
-        console.log(list.length)
+        // console.log(list)
+        console.log('Products processed')
         if (list.length === 535) {
           res.send('error')
         } else {
