@@ -81,8 +81,8 @@ app.post('/search', async (req, res) => {
       request = request.concat('&nova_groups=', obj.nova_group)
     }
 
-    if (obj.additives_n === 0) {
-      request = request.concat('&additives=with')
+    if (obj.additives_n === true) {
+      request = request.concat('&additives=without')
     }
 
     if (obj.ingredients_from_palm_oil_n === true) {
