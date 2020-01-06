@@ -80,6 +80,43 @@ app.post('/register', async (request, response) => {
   }
 })
 
+app.post('/insertList', async (request, response) => {
+  const objUser = request.body.product
+  const code = objUser.code
+  const email = objUser.email
+
+  if (email && code) {
+    connection.query('INSERT INTO list (code,email) VALUES (?,?)', [code, email], function (err, results, fields) {
+      if (err) throw err
+
+      console.log(results)
+
+      response.end()
+    })
+  } else {
+    response.end()
+  }
+})
+
+app.post('/getList', async (request, response) => {
+  const obj = request.body.emailUser
+  const email = obj.email
+  if (email) {
+    connection.query('SELECT * FROM list WHERE Email = ?', [email], function (err, results, fields) {
+      if (err) throw err
+
+      if (results.length > 0) {
+        response.send(results)
+      } else {
+        response.send(null)
+      }
+      response.end()
+    })
+  } else {
+    response.end()
+  }
+})
+
 // Query API
 app.post('/code', async (req, res) => {
   console.log('[POST] code')
@@ -126,7 +163,7 @@ app.post('/search', async (req, res) => {
     // console.log(obj)
 
     // const name = obj.product_name
-    const request = ''
+    let request = ''
 
     if (obj.product_name !== '') {
       request = request.concat('&search_terms=', obj.product_name)
@@ -176,7 +213,7 @@ app.post('/search', async (req, res) => {
       .on('data', (data) => results.push(data))
       .on('end', () => {
         console.log(results.length, 'results')
-        for (const i = 0; i < results.length; i++) {
+        for (let i = 0; i < results.length; i++) {
           const item = results[i]
 
           list.push({

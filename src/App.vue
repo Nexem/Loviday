@@ -173,7 +173,7 @@
           <v-icon class="mr-2">home</v-icon>
           <v-list-item-content>Home</v-list-item-content>
         </v-list-item>
-        <p v-if=' connected == true '>
+        <p v-if=' connected === true '>
           <v-list-item @click='movePage("Lists")'>
             <v-icon class="mr-2">shopping_cart</v-icon>
             <v-list-item-content>My products' lists</v-list-item-content>

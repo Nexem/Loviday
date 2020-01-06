@@ -45,7 +45,6 @@
                 <v-btn
                   :value="item"
                   :checked="false"
-                  name="checkboxe"
                   text icon color="red"
                   @click="deleteItem($event, i)"
                   
@@ -62,6 +61,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   data: () => ({
     products: [],
@@ -69,8 +70,34 @@ export default {
   }),
 
   created(){
-    this.products = this.$store.getters.getProducts
-    this.numberProduct = this.products.length
+    const vm = this
+
+    const emailUser = {
+      email: this.$store.getters.getEmail
+    }
+
+    axios.post('http://localhost:3000/getList', { emailUser })
+      .then(function (response) {
+        const result = response.data
+        let codeList = []
+
+        //Extract only code variable to push in Array
+        result.forEach(function(element) {
+          codeList.push(element.code)
+        })
+
+        //Sort to eliminate duplicatas
+        let uniqueArray = [...new Set(codeList)]
+        vm.numberProduct = uniqueArray.length
+
+        //Get products informations from API
+        uniqueArray.forEach(function(code) {
+          axios.post('http://localhost:3000/code', { code })
+          .then(function (response) {
+            vm.products.push(response.data)
+          })
+        })
+      })
   },
 
   methods: {

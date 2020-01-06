@@ -51,7 +51,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="#F1C100" text @click="queryResearch" :disabled="nameProduct==''">Research</v-btn>
+        <v-btn color="#F1C100" text @click="queryResearch" :disabled="nameProduct===''">Research</v-btn>
       </v-card-actions>
 
       <!-- Separation between research andd result -->
@@ -83,6 +83,7 @@
               <th class="text-left">Nutri score</th>
               <th class="text-left">Additives</th>
               <th class="text-left">Select</th>
+              <th class="text-left">Info</th>
             </tr>
           </thead>
           <tbody>
@@ -104,6 +105,32 @@
                   color="green accent-4"
                   @change="productSelected($event, i)"
                 ></v-checkbox> </td>
+              <td>
+                <v-dialog v-model="Register" max-width="600px" style="background-color: floralwhite" class="mx-3" v-if="!connected"  :disabled="connected">
+                  <template v-slot:activator="{ on }">
+                    <v-btn text icon color="#F1C100" dark v-on="on">
+                      <v-icon>mdi-information</v-icon>
+                    </v-btn>
+                  </template>
+                  <v-card>
+                    <tr>
+                      <v-img
+                          :src="item.image_url"
+                          max-height="250"
+                          max-width="250"
+                        ></v-img>
+                      <v-card-text>Product name :         {{ item.product_name }}</v-card-text>
+                      <v-card-text>Nova group :           {{ item.nova_group }}</v-card-text>
+                      <v-card-text>Nutriscore :           {{ item.nutriscore_grade }}</v-card-text>
+                      <v-card-text>Additives :            {{ item.additives_n }}</v-card-text>
+                      <v-card-text>Origin :               {{ item.origins }}</v-card-text>
+                      <v-card-text>Manufacturing place :  {{ item.manufacturing_places }}</v-card-text>
+                      <v-card-text>Energy (100g) :        {{ item.energy_100g }} Kj</v-card-text>
+                      <v-card-text>Ingredients :          {{ item.ingredients_text }}</v-card-text>
+                    </tr>
+                  </v-card>
+                </v-dialog>
+              </td>
             </tr>
             <v-card-actions>
               
@@ -112,7 +139,7 @@
                 <v-btn color="#F1C100" text v-if="resultProductsName!=''" @click="showmore">show next</v-btn> 
                 <small>Number of results : {{numberProductReturned}}</small>
             </v-card-actions>
-            <v-card-actions>
+            <v-card-actions :disabled="emailUser!=''">
               
               <!-- Button displayed only if min 1 element displayed -->
               <v-btn color="#F1C100" text @click="addToList">Add to List</v-btn>
@@ -145,18 +172,25 @@ export default {
     //List containing the product returned by the API, it's displayed into the List below the research field
     resultProducts: [],
     numberProductReturned: '',
-
     productChecked: [],
 
     part1: 0,
     part2: 15,
+
+    emailUser: ''
   }),
+
+  created(){
+    this.emailUser = this.$store.getters.getEmail
+  },
 
   methods: {
     // function to redirect to other pages
     movePage(path) {
       this.$router.push(path);
     },
+
+    
 
     showmore(){
       this.part2 += 15
@@ -212,26 +246,38 @@ export default {
 
     //Add products to user list
     addToList() {
-
       const vm = this
       const uniqueArray = this.productChecked.filter(function(item, pos, self) {
-          return self.indexOf(item) == pos && pos != null;
+          return self.indexOf(item) === pos && pos != null;
       })
       
       uniqueArray.forEach(function(element) {
-        if(element != null)
-          vm.$store.commit('addProductToList', element);
-      });
+        
+        if(element != null){
+          const product = {
+            code: element.code,
+            email: vm.emailUser
+          }
+          console.log(vm.emailUser)
+          
+          axios.post('http://localhost:3000/insertList', { product })
+            .then(function (response) {
+              return response 
+            })
+        }
+      })
     },
 
     addToFavs() {
       const uniqueArray = this.productChecked.filter(function(item, pos, self) {
-          return self.indexOf(item) == pos && pos != null
+          return self.indexOf(item) === pos && pos != null
       })
 
       uniqueArray.forEach(function(element){
         if(element != null) {
           return null
+
+
         }
       })
     }
