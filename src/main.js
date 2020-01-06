@@ -53,7 +53,7 @@ const store = new Vuex.Store({
       pwd: null
     },
     productList: {
-      nameProduct: ['item1', 'item2']
+      nameProduct: []
     },
     favsList: {
       nameProduct: []

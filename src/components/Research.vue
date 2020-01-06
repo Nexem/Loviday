@@ -16,7 +16,7 @@
             <v-col cols="12">
               <v-checkbox
                 v-model="palmOil"
-                :label="`Do not contain palm oil`"
+                :label="`Do not contain palm oil ?`"
               ></v-checkbox>
             </v-col>
             <v-col cols="12">
@@ -26,11 +26,10 @@
               ></v-checkbox>
             </v-col>
             <v-col sm="3">
-              <v-select
+              <v-checkbox
                 v-model="additives"
-                :items="numberadditivesItems"
-                label="Number of additives"
-              ></v-select>
+                label="Additives in the product ?"
+              ></v-checkbox>
             </v-col>
             <v-col sm="3">
               <v-select
@@ -58,52 +57,70 @@
       <!-- Separation between research andd result -->
       <v-divider :inset="inset"></v-divider>
 
-      <!-- List of results -->
-      <v-list shaped v-if="resultProducts!=''"> 
-        <v-list-item-group v-model="checklistProduct" multiple>
-          <template v-for="(item, i) in resultProductsName.slice(part1,part2)">
-            <v-divider v-if="!item" :key="`divider-${i}`"></v-divider>
+      <v-dialog v-model="loading" fullscreen full-width>
+        <v-container fluid fill-height style="background-color: rgba(255, 255, 255, 0.5);">
+          <v-layout justify-center align-center>
+            <v-progress-circular
+              indeterminate
+              :width="3"
+              color="amber">
+            </v-progress-circular>
+          </v-layout>
+        </v-container>
+      </v-dialog>
 
-            <v-list-item
-              v-else
-              :key="`item-${i}`"
-              :value="item"
-              active-class="green--text text--accent-4"
-            >
-              <template v-slot:default="{ active, toggle }">
-                <v-img
-                  :src="resultProductsImage[i]"
+
+      <!-- List of results -->          
+      <v-simple-table 
+        shaped v-if="resultProducts!=''" 
+        >
+        <template v-slot:default>
+          <thead>
+            <tr>
+              <th class="text-left">Image of product</th>
+              <th class="text-left">Name</th>
+              <th class="text-left">Nova score</th>
+              <th class="text-left">Nutri score</th>
+              <th class="text-left">Number of additives</th>
+              <th class="text-left">Select</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item,i) in resultProducts.slice(part1,part2)" :key="item.product_name">
+              <td><v-img
+                  :src="item.image_url"
                   max-height="50"
                   max-width="50"
                 ></v-img>
-                <v-list-item-content>
-                  <v-list-item-title v-text="item"></v-list-item-title>
-                  <v-icon>alpha-a-circle-outline</v-icon>
-                </v-list-item-content>
-
-                <v-list-item-action>
-                  <v-checkbox
-                    :value="item"
-                    color="green accent-4"
-                    v-model="checkedProduct"
-                    @change="productSelected($event, i)"
-                  ></v-checkbox>
-                </v-list-item-action>
-              </template>
-            </v-list-item>
-          </template>
-          <v-spacer></v-spacer>
-          <v-btn color="#F1C100" text v-if="part1 != 0" @@click="part1 -= 15, part2 -= 15">show previous</v-btn> 
-          <v-btn color="#F1C100" text @@click="part2 += 15, part1 += 15">show next</v-btn> 
-          
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <!-- Button displayed only if min 1 element displayed -->
-            <v-btn color="#F1C100" text @click="addToList">Add to List</v-btn>
-            <v-btn color="#F1C100" text @click="addToFavorite">Add to Favorite</v-btn>
-          </v-card-actions>
-        </v-list-item-group>
-      </v-list>
+              </td>
+              <td>{{ item.product_name }}</td>
+              <td>{{ item.nova_group }}</td>
+              <td>{{ item.nutriscore_grade }}</td>
+              <td>{{ item.additives_n }}</td>
+              <td> <v-checkbox
+                  :value="item"
+                  :checked="false"
+                  name="checkboxe"
+                  color="green accent-4"
+                  @change="productSelected($event, i)"
+                ></v-checkbox> </td>
+            </tr>
+            <v-card-actions>
+              
+                <!-- Button to display nexts products -->
+                <v-btn color="#F1C100" text v-if="part1 != 0" @click="showless">show previous</v-btn> 
+                <v-btn color="#F1C100" text v-if="resultProductsName!=''" @click="showmore">show next</v-btn> 
+                <small>Number of results : {{numberProductReturned}}</small>
+            </v-card-actions>
+            <v-card-actions>
+              
+              <!-- Button displayed only if min 1 element displayed -->
+              <v-btn color="#F1C100" text @click="addToList">Add to List</v-btn>
+              <v-btn color="#F1C100" text @click="addToFavs">Add to Favorite</v-btn>
+            </v-card-actions>
+          </tbody>
+        </template>
+      </v-simple-table>
     </v-card>
   </div>
 </template>
@@ -113,9 +130,9 @@ import axios from 'axios'
 
 export default {
   data: () => ({
+    loading: false,
     //Research field
     nameProduct: '',
-    nameCompany: '',
     palmOil: '',
     origin: '',
     additives: '',
@@ -124,16 +141,15 @@ export default {
     //Lists for itemsLists displayed for research
     novascoreItems: ['1','2','3','4','5'],
     nutriscoreItems: ['A','B','C','E','F'],
-    numberadditivesItems: ['1','2','3','4','5','>5'],
 
     //List containing the product returned by the API, it's displayed into the List below the research field
-    resultProductsName: [],
-    resultProductsNova: [],
-    resultProductsImage: [],
+    resultProducts: [],
+    numberProductReturned: '',
+
     productChecked: [],
 
     part1: 0,
-    part2: 15
+    part2: 15,
   }),
 
   methods: {
@@ -142,11 +158,35 @@ export default {
       this.$router.push(path);
     },
 
+    showmore(){
+      this.part2 += 15
+      this.part1 += 15
+    },
+
+    showless(){
+      this.part1 -= 15
+      this.part2 -= 15
+    },
+
+    toggleAll () {
+      if (this.selected.length) this.selected = []
+      else this.selected = this.items.slice()
+    },
+    changeSort (column) {
+      if (this.pagination.sortBy === column) {
+        this.pagination.descending = !this.pagination.descending
+      } else {
+        this.pagination.sortBy = column
+        this.pagination.descending = false
+      }
+    },
+
     queryResearch(){
+      this.loading = true
       const vm = this
-      vm.resultProductsName=[]
-      vm.resultProductsImage=[]
-      vm.resultProductsNova=[]
+      //Reset tab for new query
+      vm.resultProducts=[]
+
       //Object created
       var researchQuery = {
         code: '',
@@ -166,21 +206,18 @@ export default {
 
       axios
         // send product code to backend
-        // .post('http://localhost:3000/code', { code: '3178530405774' })
         .post('http://localhost:3000/search', { researchQuery })
         // get product information from backend
         .then(function (response) {
-          // console.log(response.data[1].product_name)
-          
+          vm.loading = false
           // var result
           response.data.forEach(function(element) {
-            // console.log("okok")
-            vm.resultProductsName.push(element.product_name)
-            vm.resultProductsImage.push(element.image_url)
-            vm.resultProductsNova.push(element.nova_group)
+            vm.resultProducts.push(element)
           })
+          vm.numberProductReturned = vm.resultProducts.length
         })
     },
+
 
     //Item selected to be added to user list
     productSelected(val){
@@ -198,6 +235,20 @@ export default {
       uniqueArray.forEach(function(element) {
         if(element != null)
           vm.$store.commit('addProductToList', element);
+        console.log(element)
+      });
+    },
+
+    addToFavs() {
+      const vm = this
+      var uniqueArray = this.productChecked.filter(function(item, pos, self) {
+          return self.indexOf(item) == pos && pos != null;
+      })
+      
+      uniqueArray.forEach(function(element) {
+        if(element != null)
+          vm.$store.commit('addFavsList', element);
+        console.log(element)
       });
     }
   }
@@ -207,7 +258,7 @@ export default {
 
 <style scoped>
   div.white_background {
-    background: white;
+    background: lightgray;
     display: flex;
     align-items: center;
     justify-content: center;
