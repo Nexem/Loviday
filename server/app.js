@@ -10,8 +10,6 @@ const app = express()
 
 // For DB Communication
 const mysql = require('mysql')
-const session = require('express-session')
-const bodyParser = require('body-parser')
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))
@@ -23,9 +21,67 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 
+/*
+*
+* Queries for DB Loviday
+*
+*/
+const connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: '',
+  database: 'loviday'
+})
+
+app.post('/auth', async function (request, response) {
+  const objUser = request.body.user
+  const email = objUser.email
+  const pwd = objUser.pwd
+
+  if (email && pwd) {
+    connection.query('SELECT * FROM users WHERE email = \'' + email + '\' AND pwd = \'' + pwd + '\';', function (err, result, fields) {
+      if (err) throw err
+      if (result.length > 0) {
+        response.send(objUser)
+      } else {
+        response.send(null)
+      }
+      response.end()
+    })
+  } else {
+    response.send(null)
+    response.end()
+  }
+})
+
+app.post('/register', async (request, response) => {
+  const objUser = request.body.user
+  const email = objUser.email
+  const pwd = objUser.pwd
+  if (email && pwd) {
+    connection.query('SELECT * FROM users WHERE email = \'' + email + '\' AND pwd = \'' + pwd + '\';', function (results) {
+      if (results != null) {
+        if (results.length > 0) {
+          response.send('Connected')
+        } else {
+          response.send('Incorrect email and/or password')
+        }
+      } else {
+        console.log('failed connected')
+        response.send('error : null result')
+      }
+      response.end()
+    })
+  } else {
+    response.send('Please enter email and password')
+    response.end()
+  }
+})
+
+// Query API
 app.post('/code', async (req, res) => {
   console.log('[POST] code')
-  var code = req.body.code
+  const code = req.body.code
 
   const result = await axios({
     method: 'get',
@@ -33,11 +89,11 @@ app.post('/code', async (req, res) => {
     responseType: 'json'
   })
 
-  var item = result.data.product
+  const item = result.data.product
 
   // console.log(item.code)
 
-  var element = {
+  const element = {
     code: item.code,
     product_name: item.product_name,
     origins: item.origins,
@@ -68,7 +124,7 @@ app.post('/search', async (req, res) => {
     // console.log(obj)
 
     // const name = obj.product_name
-    var request = ''
+    const request = ''
 
     if (obj.product_name !== '') {
       request = request.concat('&search_terms=', obj.product_name)
@@ -99,7 +155,7 @@ app.post('/search', async (req, res) => {
     // console.log(request)
 
     // const url = `${beginUrl}&search_terms=${name}&${endUrl}`
-    var url = beginUrl.concat(request, endUrl)
+    const url = beginUrl.concat(request, endUrl)
     // console.log('url ! ', url)
 
     const result = await axios({
@@ -112,14 +168,14 @@ app.post('/search', async (req, res) => {
 
     const results = []
 
-    var list = []
+    const list = []
 
     result.data.pipe(csv({ separator: '\t' }))
       .on('data', (data) => results.push(data))
       .on('end', () => {
         console.log(results.length, 'results')
-        for (var i = 0; i < results.length; i++) {
-          var item = results[i]
+        for (const i = 0; i < results.length; i++) {
+          const item = results[i]
 
           list.push({
             code: item.code,
@@ -148,44 +204,6 @@ app.post('/search', async (req, res) => {
       })
   } else {
     res.send('error')
-  }
-})
-
-/*
-*
-* Queries for DB Loviday
-*
-*/
-const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'loviday'
-})
-
-app.post('/auth', function (request, response) {
-  const objUser = request.body.user
-  const email = objUser.email
-  const pwd = objUser.pwd
-  console.log('state', connection.state)
-  // console.log('okok   ', this.email, this.pwd)
-  if (email && pwd) {
-    // console.log('SELECT * FROM users WHERE email = \'' + email + '\' AND pwd = \'' + pwd + '\';')
-    connection.query('SELECT * FROM users WHERE email = \'' + email + '\' AND pwd = \'' + pwd + '\';', function (results) {
-      if (results != null) {
-        if (results.length > 0) {
-          response.send('Connected')
-        } else {
-          response.send('Incorrect email and/or password')
-        }
-      } else {
-        response.send('error : null result')
-      }
-      response.end()
-    })
-  } else {
-    response.send('Please enter email and password')
-    response.end()
   }
 })
 
