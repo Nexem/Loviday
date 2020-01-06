@@ -8,6 +8,11 @@ const axios = require('axios')
 const cors = require('cors')
 const app = express()
 
+// For DB Communication
+const mysql = require('mysql')
+const session = require('express-session')
+const bodyParser = require('body-parser')
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
@@ -143,6 +148,44 @@ app.post('/search', async (req, res) => {
       })
   } else {
     res.send('error')
+  }
+})
+
+/*
+*
+* Queries for DB Loviday
+*
+*/
+const connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: '',
+  database: 'loviday'
+})
+
+app.post('/auth', function (request, response) {
+  const objUser = request.body.user
+  const email = objUser.email
+  const pwd = objUser.pwd
+  console.log('state', connection.state)
+  // console.log('okok   ', this.email, this.pwd)
+  if (email && pwd) {
+    // console.log('SELECT * FROM users WHERE email = \'' + email + '\' AND pwd = \'' + pwd + '\';')
+    connection.query('SELECT * FROM users WHERE email = \'' + email + '\' AND pwd = \'' + pwd + '\';', function (results) {
+      if (results != null) {
+        if (results.length > 0) {
+          response.send('Connected')
+        } else {
+          response.send('Incorrect email and/or password')
+        }
+      } else {
+        response.send('error : null result')
+      }
+      response.end()
+    })
+  } else {
+    response.send('Please enter email and password')
+    response.end()
   }
 })
 
