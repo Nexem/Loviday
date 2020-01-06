@@ -2,7 +2,6 @@ import Vue from 'vue'
 import App from './App.vue'
 import vuetify from './plugins/vuetify'
 import VueRouter from 'vue-router'
-import Login from './components/Login.vue'
 import Welcome from './components/Welcome.vue'
 import Research from './components/Research.vue'
 import Lists from './components/Lists.vue'
@@ -16,11 +15,7 @@ Vue.use(Vuex)
 const router = new VueRouter({
   mode: 'history',
   routes: [
-    {
-      path: '/Login',
-      component: Login,
-      name: 'Login'
-    },
+
     {
       path: '/Welcome',
       component: Welcome,
@@ -64,6 +59,7 @@ const store = new Vuex.Store({
     connect (state, { email, pwd }) {
       state.user.email = email
       state.user.pwd = pwd
+      router.push('Welcome')
     },
     disconnect (state) {
       state.user.email = null

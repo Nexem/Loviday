@@ -8,21 +8,14 @@
       </v-btn>
 
       <v-spacer></v-spacer>
-      <v-toolbar-title class="white--text" color="#FFFAF5">LOVIDAY</v-toolbar-title>
+        <v-toolbar-title class="white--text" color="#FFFAF5">
+          <v-btn text color="white" @click='movePage("Welcome")'
+          ><h1> 
+            LOVIDAY
+            </h1>
+          </v-btn>
+        </v-toolbar-title>
       <v-spacer></v-spacer>
-
-      <!-- search bar -->
-      <v-text-field
-        id="search"
-        prepend-inner-icon="search"
-        v-model="search"
-        dense
-        outlined
-        color="#F1C100"
-        label="Search"
-        class="mt-7 mr-3"
-        background-color="#FFFAF5"
-      ></v-text-field>
 
       <!-- dialog for connexion or disconnexion -->
       <v-dialog v-model="Disconnection" max-width="600px" style="background-color: floralwhite" v-if="connected"  :disabled="!connected">
@@ -95,8 +88,15 @@
               </v-card-text>
             </v-container>
           </v-card-text>
+          <p v-if=' errors.length '>
+            <v-alert :value='true' color="red" class='text-md-center'>
+              <h4>
+                <div v-for='error in errors' :key='error' class="white--text">{{ error }}</div>
+              </h4>
+            </v-alert>
+          </p>
           <v-card-actions>
-            <v-btn @click="connect" color="#F1C100" text>CONNEXION</v-btn>
+            <v-btn @click="connect(emailcon,pwdcon)" color="#F1C100" text>CONNEXION</v-btn>
             <v-spacer></v-spacer>
           </v-card-actions>
         </v-card>
@@ -144,7 +144,8 @@
                   </p>
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="#F1C100" text @click='register'>Save</v-btn>
+                    <v-btn color="#F1C100" text @click='register(emailreg,pwdreg,lastname,firstname)' 
+                    :disabled="!firstname || !lastname || !emailreg || !pwdreg || !pwdreg2">Save</v-btn>
                   </v-card-actions>
                 </v-card>
             </v-dialog>
@@ -214,6 +215,7 @@
 
 
 <script>
+import axios from 'axios'
 export default {
   name: "App",
   data: () => ({
@@ -234,6 +236,7 @@ export default {
     this.movePage("Welcome");
     if(this.$store.getters.getEmail != null){
       this.connected = true
+      this.emailConnectedUser = this.$store.getters.getEmail 
     }
   },
 
@@ -242,38 +245,84 @@ export default {
       this.$router.push(path);
 
     },
-    connect (){
+
+    //Connexion function
+    connect (emailuser,pwduser){
       this.errors = []
-      // if correspond to the bdd then:
-
-
-      this.connected = true
-      this.$store.commit('connect', {
-        email: this.emailcon,
-        pwd: this.pwdcon
-      })
-      this.emailConnectedUser = this.emailcon
+      const vm = this
+      const user = {
+        email: emailuser,
+        pwd: pwduser
+      }
+      //Query for auth
+      axios.post('http://localhost:3000/auth', { user })
+        .then(function (response) {
+          console.log(response) 
+          if(response.data != null) {
+            console.log("connected to website")
+            vm.connected = true
+            
+            alert('You are connected')
+            vm.emailConnectedUser = response.data.email
+                       
+            vm.$store.commit('connect', {
+              email: response.data.email,
+              pwd: response.data.pwd
+            }) 
+            vm.movePage("Welcome");
+          } 
+          else{
+            vm.errors.push("Wrong Ids")
+          }
+        });
     },
+
+    //Disconnect function
     disconnect (){
       this.connected = false
-      this.emailcon = null
-      this.pwdcon = null
+      this.emailConnectedUser = null
       this.$store.commit('disconnect')
+      this.movePage("Welcome");
     },
-    register () {
+
+
+    //register function
+    register (emailuser,pwduser,nameuser,firstnameuser) {
       this.errors = []
-      // if (this.emailreg != email dans bdd)
+      const vm = this
+      const registerUser = {
+        email: emailuser, 
+        pwd: pwduser,
+        lastname: nameuser,
+        firstname: firstnameuser,
+      }
+
       if (this.pwdreg === this.pwdreg2) {
-        alert('You are registered')
-        this.$store.commit('register', {
-          firstname: this.firstname,
-          lastname: this.lastname,
-          email: this.emailreg,
-          pwd: this.pwdreg
-        })
-        this.connected = true
-        this.emailConnectedUser = this.emailreg
-      } else {
+        //Query for auth
+        axios.post('http://localhost:3000/register', { registerUser })
+          .then(function (response) {
+            console.log(response) 
+            if(response.data != null) {
+              console.log("registered to website")
+              vm.connected = true
+              
+              alert('You are registered')
+              vm.emailConnectedUser = response.data.email
+                          
+              vm.$store.commit('register', {
+                firstname: response.data.firstname,
+                lastname: response.data.lastname,
+                email: response.data.email,
+                pwd: response.data.pwd
+              }) 
+              vm.movePage("Welcome");
+            } 
+            else{
+              vm.errors.push("Wrong Ids")
+            }
+          });
+      }
+      else {
         this.errors.push("Passwords don't match")
       }
     }

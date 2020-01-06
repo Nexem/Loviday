@@ -192,43 +192,18 @@ export default {
       }
 
       axios
-        // send product code to backend
+        // send research to backend
         .post('http://localhost:3000/search', { researchQuery })
-        // get product information from backend
+        // get products information from backend
         .then(function (response) {
           vm.loading = false
-          // var result
+          
           response.data.forEach(function(element) {
             vm.resultProducts.push(element)
           })
           vm.numberProductReturned = vm.resultProducts.length
         })
     },
-
-    //Connect to DB and send query
-    conn(str) {
-      console.log("Enter conn()")
-      const mysql = require('mysql')
-
-      const con = mysql.createConnection({
-        host: "localhost",
-        user: "root",
-        password: "",
-        database: "bddloviday"
-      })
-
-      console.log("Before connecting")
-      con.connect(function(err) {
-        if (err) throw err
-        console.log("Connected!")
-
-        con.query(str, function (err) {
-          if (err) throw err
-          console.log("1 record inserted")
-        })
-      })
-    },
-
 
     //Item selected to be added to user list
     productSelected(val){
@@ -246,7 +221,6 @@ export default {
       uniqueArray.forEach(function(element) {
         if(element != null)
           vm.$store.commit('addProductToList', element);
-        console.log(element)
       });
     },
 
@@ -257,29 +231,7 @@ export default {
 
       uniqueArray.forEach(function(element){
         if(element != null) {
-          console.log("before insert")
-          var sql = "INSERT INTO favorite (Code, Email) VALUES ('" + element.code + "', '" + "vincent.dairien@gmail.com" + "')"
-          console.log("query : ", sql)
-          console.log("Enter conn()")
-          var mysql = require('mysql')
-
-          var con = mysql.createConnection({
-            host: "localhost",
-            user: "root",
-            password: "",
-            database: "bddloviday"
-          })
-
-          console.log("Before connecting")
-          con.connect(function(err) {
-            if (err) throw err
-            console.log("Connected!")
-
-            con.query(sql, function (err) {
-              if (err) throw err
-              console.log("1 record inserted")
-            })
-          })
+          return null
         }
       })
     }

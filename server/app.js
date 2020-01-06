@@ -55,25 +55,27 @@ app.post('/auth', async function (request, response) {
 })
 
 app.post('/register', async (request, response) => {
-  const objUser = request.body.user
+  const objUser = request.body.registerUser
   const email = objUser.email
   const pwd = objUser.pwd
-  if (email && pwd) {
-    connection.query('SELECT * FROM users WHERE email = \'' + email + '\' AND pwd = \'' + pwd + '\';', function (results) {
-      if (results != null) {
-        if (results.length > 0) {
-          response.send('Connected')
-        } else {
-          response.send('Incorrect email and/or password')
-        }
+  const lastname = objUser.lastname
+  const firstname = objUser.firstname
+
+  if (email && pwd && lastname && firstname) {
+    connection.query('INSERT INTO users (email,prenom,nom,pwd) VALUES (?,?,?,?)', [email, firstname, lastname, pwd], function (err, results, fields) {
+      if (err) throw err
+
+      console.log(results)
+
+      if (results.length > 0) {
+        response.send(objUser)
       } else {
-        console.log('failed connected')
-        response.send('error : null result')
+        response.send(null)
       }
       response.end()
     })
   } else {
-    response.send('Please enter email and password')
+    response.send(null)
     response.end()
   }
 })
