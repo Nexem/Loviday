@@ -126,7 +126,7 @@ app.post('/search', async (req, res) => {
     // console.log(obj)
 
     // const name = obj.product_name
-    const request = ''
+    var request = ''
 
     if (obj.product_name !== '') {
       request = request.concat('&search_terms=', obj.product_name)
@@ -176,7 +176,7 @@ app.post('/search', async (req, res) => {
       .on('data', (data) => results.push(data))
       .on('end', () => {
         console.log(results.length, 'results')
-        for (const i = 0; i < results.length; i++) {
+        for (var i = 0; i < results.length; i++) {
           const item = results[i]
 
           list.push({
