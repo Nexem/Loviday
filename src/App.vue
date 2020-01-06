@@ -24,7 +24,7 @@
         background-color="#FFFAF5"
       ></v-text-field>
 
-      <!-- dialog for connexion -->
+      <!-- dialog for connexion or disconnexion -->
       <v-dialog v-model="Connection" max-width="600px" style="background-color: floralwhite">
         <template v-slot:activator="{ on }">
           <v-btn color="#F1C100" class="white--text" dark v-on="on">
@@ -32,10 +32,10 @@
           </v-btn>
         </template>
 
-        <p v-if='connected == true'>
+        <p v-if=' connected === true '>
           <v-card color="#FFFAF5">
             <v-card-title>
-              <span class="register">DISCONNEXION</span>
+              <span class="register">DISCONNECTION</span>
             </v-card-title>
             <v-card-text>
               <v-container>
@@ -47,7 +47,6 @@
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn color="#F1C100" text @click='disconnect'>YES</v-btn>
-                  <v-btn color="#F1C100" text @click='display = false'>NO</v-btn>
                   <v-spacer></v-spacer>
                 </v-card-actions>
               </v-container>
@@ -55,15 +54,15 @@
           </v-card>
         </p>
 
-        <p v-if='connected == false'>
+        <p v-if=' connected === false '>
           <v-card color="#FFFAF5">
             <v-card-title>
-              <span class="register">CONNEXION</span>
+              <span class="register">CONNECTION</span>
             </v-card-title>
             <v-card-text>
               <v-container>
                 <v-card-text>
-                  <v-form>
+                  <v-form action="auth" method="POST">
                     <v-text-field
                       outlined
                       dense
@@ -92,7 +91,7 @@
               </v-container>
             </v-card-text>
             <v-card-actions>
-              <v-btn @click="connect" color="#F1C100" text>CONNEXION</v-btn>
+              <v-btn @click="connect" color="#F1C100" text>CONNECTION</v-btn>
               <v-spacer></v-spacer>
 
               <!-- dialog for registration -->
@@ -126,7 +125,7 @@
                     </v-container>
                     <small>*indicates required field</small>
                   </v-card-text>
-                  <p v-if='errors.length'>
+                  <p v-if=' errors.length '>
                     <v-alert :value='true' color="red" class='text-md-center'>
                       <h4>
                         <div v-for='error in errors' :key='error' class="white--text">{{ error }}</div>
@@ -148,14 +147,16 @@
     <!-- Contenu du menu -->
     <v-navigation-drawer v-model="drawer" absolute temporary color="#FFFAF5" class="white--text">
       <!-- the user -->
-      <v-list-item>
-        <!-- v-list-item-avatar>
-          <v-img src="https://randomuser.me/api/portraits/men/78.jpg"></v-img>
-        </v-list-item-avatar -->
-        <v-list-item-content>
-          <v-list-item-title>John Leider</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
+      <p v-if=' connected === true '>
+        <v-list-item>
+          <!-- v-list-item-avatar>
+            <v-img src="https://randomuser.me/api/portraits/men/78.jpg"></v-img>
+          </v-list-item-avatar -->
+          <v-list-item-content>
+            <v-list-item-title>{{ emailcon }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </p>
 
       <v-divider></v-divider>
 
@@ -165,7 +166,7 @@
           <v-icon class="mr-2">home</v-icon>
           <v-list-item-content>Home</v-list-item-content>
         </v-list-item>
-        <p v-if='connected == true'>
+        <p v-if=' connected == true '>
           <v-list-item @click='movePage("Lists")'>
             <v-icon class="mr-2">shopping_cart</v-icon>
             <v-list-item-content>My products' lists</v-list-item-content>
@@ -179,20 +180,20 @@
           <v-icon class="mr-2">search</v-icon>
           <v-list-item-content>Do a research</v-list-item-content>
         </v-list-item>
-        <p v-if='connected == true'>
+        <p v-if=' connected === true '>
           <v-list-item @click='movePage("Account")'>
             <v-icon class="mr-2">account_circle</v-icon>
             <v-list-item-content>My account</v-list-item-content>
           </v-list-item>
         </p>
         
-        <p v-if='connected == false'>
+        <p v-if=' connected === false '>
           <v-list-item @click='movePage("Login")'>
             <v-icon class="mr-2">logout</v-icon>
             <v-list-item-content>Log in</v-list-item-content>
           </v-list-item>
         </p>
-        <p v-if='connected == true'>
+        <p v-if=' connected === true '>
           <v-list-item @click='disconnect'>
             <v-icon class="mr-2">logout</v-icon>
             <v-list-item-content>Log out</v-list-item-content>
@@ -264,11 +265,11 @@ export default {
     connect (){
       this.errors = []
       // if correspond à la bdd then:
+      this.connected = true
       this.$store.commit('connect', {
         email: this.emailcon,
         pwd: this.pwdcon
       })
-      this.connected = true
     },
     disconnect (){
       this.connected = false
@@ -279,7 +280,7 @@ export default {
     register () {
       this.errors = []
       // if (this.emailreg != email dans bdd)
-      if (this.pwdreg === this.pwdreg2 && this.pwdreg != null) {
+      if (this.pwdreg === this.pwdreg2 && this.pwdreg !== null) {
         alert('You are registered')
         this.$store.commit('register', {
           firstname: this.firstname,

@@ -64,7 +64,7 @@ const store = new Vuex.Store({
     authenticate (state, [email, pwd]) {
       state.user.email = email
       state.user.pwd = pwd
-      router.push('App')
+      router.push('Welcome')
     },
     connect (state, { email, pwd }) {
       state.user.email = email
@@ -73,7 +73,7 @@ const store = new Vuex.Store({
     disconnect (state) {
       state.user.email = null
       state.user.pwd = null
-      router.push('App')
+      router.push('Welcome')
     },
     register (state, { firstname, lastname, email, pwd }) {
       state.user.firstname = firstname
