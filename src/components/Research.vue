@@ -9,14 +9,14 @@
         <v-container>
           <v-row>
             <v-col cols="12" sm="6">
-              <v-text-field label="Name of the product"
+              <v-text-field label="Name of the product*"
                 v-model="nameProduct"
               ></v-text-field>
             </v-col>
             <v-col cols="12">
               <v-checkbox
                 v-model="palmOil"
-                :label="`Do not contain palm oil ?`"
+                :label="`Do not contain palm oil`"
               ></v-checkbox>
             </v-col>
             <v-col cols="12">
@@ -28,7 +28,7 @@
             <v-col sm="3">
               <v-checkbox
                 v-model="additives"
-                label="Additives in the product ?"
+                label="No additives"
               ></v-checkbox>
             </v-col>
             <v-col sm="3">
@@ -46,12 +46,12 @@
               ></v-select>
             </v-col>
           </v-row>
-          <small>You can refer many fields at a time</small>
+          <small>* Mandatory field</small>
         </v-container>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="#F1C100" text @click="queryResearch">Research</v-btn>
+        <v-btn color="#F1C100" text @click="queryResearch" :disabled="nameProduct==''">Research</v-btn>
       </v-card-actions>
 
       <!-- Separation between research andd result -->
@@ -81,7 +81,7 @@
               <th class="text-left">Name</th>
               <th class="text-left">Nova score</th>
               <th class="text-left">Nutri score</th>
-              <th class="text-left">Number of additives</th>
+              <th class="text-left">Additives</th>
               <th class="text-left">Select</th>
             </tr>
           </thead>
@@ -168,19 +168,6 @@ export default {
       this.part2 -= 15
     },
 
-    toggleAll () {
-      if (this.selected.length) this.selected = []
-      else this.selected = this.items.slice()
-    },
-    changeSort (column) {
-      if (this.pagination.sortBy === column) {
-        this.pagination.descending = !this.pagination.descending
-      } else {
-        this.pagination.sortBy = column
-        this.pagination.descending = false
-      }
-    },
-
     queryResearch(){
       this.loading = true
       const vm = this
@@ -218,6 +205,30 @@ export default {
         })
     },
 
+    //Connect to DB and send query
+    conn(str) {
+      console.log("Enter conn()")
+      var mysql = require('mysql')
+
+      var con = mysql.createConnection({
+        host: "localhost",
+        user: "root",
+        password: "",
+        database: "bddloviday"
+      })
+
+      console.log("Before connecting")
+      con.connect(function(err) {
+        if (err) throw err
+        console.log("Connected!")
+
+        con.query(str, function (err) {
+          if (err) throw err
+          console.log("1 record inserted")
+        })
+      })
+    },
+
 
     //Item selected to be added to user list
     productSelected(val){
@@ -240,16 +251,37 @@ export default {
     },
 
     addToFavs() {
-      const vm = this
       var uniqueArray = this.productChecked.filter(function(item, pos, self) {
-          return self.indexOf(item) == pos && pos != null;
+          return self.indexOf(item) == pos && pos != null
       })
-      
-      uniqueArray.forEach(function(element) {
-        if(element != null)
-          vm.$store.commit('addFavsList', element);
-        console.log(element)
-      });
+
+      uniqueArray.forEach(function(element){
+        if(element != null) {
+          console.log("before insert")
+          var sql = "INSERT INTO favorite (Code, Email) VALUES ('" + element.code + "', '" + "vincent.dairien@gmail.com" + "')"
+          console.log("query : ", sql)
+          console.log("Enter conn()")
+          var mysql = require('mysql')
+
+          var con = mysql.createConnection({
+            host: "localhost",
+            user: "root",
+            password: "",
+            database: "bddloviday"
+          })
+
+          console.log("Before connecting")
+          con.connect(function(err) {
+            if (err) throw err
+            console.log("Connected!")
+
+            con.query(sql, function (err) {
+              if (err) throw err
+              console.log("1 record inserted")
+            })
+          })
+        }
+      })
     }
   }
 }
