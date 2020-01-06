@@ -175,7 +175,7 @@ export default {
       vm.resultProducts=[]
 
       //Object created
-      var researchQuery = {
+      const researchQuery = {
         code: '',
         product_name: this.nameProduct,
         origins: this.origin,
@@ -208,9 +208,9 @@ export default {
     //Connect to DB and send query
     conn(str) {
       console.log("Enter conn()")
-      var mysql = require('mysql')
+      const mysql = require('mysql')
 
-      var con = mysql.createConnection({
+      const con = mysql.createConnection({
         host: "localhost",
         user: "root",
         password: "",
@@ -239,7 +239,7 @@ export default {
     addToList() {
 
       const vm = this
-      var uniqueArray = this.productChecked.filter(function(item, pos, self) {
+      const uniqueArray = this.productChecked.filter(function(item, pos, self) {
           return self.indexOf(item) == pos && pos != null;
       })
       
@@ -251,7 +251,7 @@ export default {
     },
 
     addToFavs() {
-      var uniqueArray = this.productChecked.filter(function(item, pos, self) {
+      const uniqueArray = this.productChecked.filter(function(item, pos, self) {
           return self.indexOf(item) == pos && pos != null
       })
 

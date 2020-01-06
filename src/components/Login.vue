@@ -119,7 +119,47 @@ h3 {
 export default {
   name: "App",
   data: () => ({
-    email: ''
+    drawer: null,
+    emailcon: null,
+    pwdcon: null,
+    firstname: null,
+    lastname: null,
+    emailreg: null,
+    pwdreg: null,
+    pwdreg2: null,
+    errors: [],
+    connected: false
   }),
+  connect (){
+      this.errors = []
+      // if correspond à la bdd then:
+      this.connected = true
+      this.$store.commit('connect', {
+        email: this.emailcon,
+        pwd: this.pwdcon
+      })
+    },
+    disconnect (){
+      this.connected = false
+      this.emailcon = null
+      this.pwdcon = null
+      this.$store.commit('disconnect')
+    },
+    register () {
+      this.errors = []
+      // if (this.emailreg != email dans bdd)
+      if (this.pwdreg === this.pwdreg2 && this.pwdreg !== null) {
+        alert('You are registered')
+        this.$store.commit('register', {
+          firstname: this.firstname,
+          lastname: this.lastname,
+          email: this.emailreg,
+          pwd: this.pwdreg
+        })
+        this.connected = true
+      } else {
+        this.errors.push("Passwords don't match")
+      }
+    }
 };
 </script>

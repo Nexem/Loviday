@@ -61,11 +61,6 @@ const store = new Vuex.Store({
   },
 
   mutations: {
-    authenticate (state, [email, pwd]) {
-      state.user.email = email
-      state.user.pwd = pwd
-      router.push('App')
-    },
     connect (state, { email, pwd }) {
       state.user.email = email
       state.user.pwd = pwd
@@ -73,7 +68,7 @@ const store = new Vuex.Store({
     disconnect (state) {
       state.user.email = null
       state.user.pwd = null
-      router.push('App')
+      router.push('Welcome')
     },
     register (state, { firstname, lastname, email, pwd }) {
       state.user.firstname = firstname
