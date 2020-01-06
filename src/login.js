@@ -29,7 +29,7 @@ app.post('/auth', function (request, response) {
   var email = request.body.email
   var pwd = request.body.pwd
   if (email && pwd) {
-    connection.query('SELECT * FROM users WHERE email = ? AND pwd = ?', [email, pwd], function (sresults) {
+    connection.query('SELECT * FROM users WHERE email = ? AND pwd = ?', [email, pwd], function (results) {
       if (results.length > 0) {
         request.session.connected = true
         request.session.email = email
