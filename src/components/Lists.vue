@@ -51,6 +51,32 @@
                 > <v-icon>mdi-cancel</v-icon>
                 </v-btn>
               </td>
+              <td>
+                <v-dialog v-model="Register" max-width="600px" style="background-color: floralwhite" class="mx-3" v-if="!connected"  :disabled="connected">
+                  <template v-slot:activator="{ on }">
+                    <v-btn text icon color="#F1C100" dark v-on="on">
+                      <v-icon>mdi-information</v-icon>
+                    </v-btn>
+                  </template>
+                  <v-card>
+                    <tr>
+                      <v-img
+                          :src="item.image_url"
+                          max-height="250"
+                          max-width="250"
+                        ></v-img>
+                      <v-card-text>Product name :         {{ item.product_name }}</v-card-text>
+                      <v-card-text>Nova group :           {{ item.nova_group }}</v-card-text>
+                      <v-card-text>Nutriscore :           {{ item.nutriscore_grade }}</v-card-text>
+                      <v-card-text>Additives :            {{ item.additives_n }}</v-card-text>
+                      <v-card-text>Origin :               {{ item.origins }}</v-card-text>
+                      <v-card-text>Manufacturing place :  {{ item.manufacturing_places }}</v-card-text>
+                      <v-card-text>Energy (100g) :        {{ item.energy_100g }} Kj</v-card-text>
+                      <v-card-text>Ingredients :          {{ item.ingredients_text }}</v-card-text>
+                    </tr>
+                  </v-card>
+                </v-dialog>
+              </td>
             </tr>
             <small>Number of products in your list : {{numberProduct}}</small>
           </tbody>
