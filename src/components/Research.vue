@@ -269,15 +269,24 @@ export default {
     },
 
     addToFavs() {
+      const vm = this
       const uniqueArray = this.productChecked.filter(function(item, pos, self) {
-          return self.indexOf(item) === pos && pos != null
+          return self.indexOf(item) === pos && pos != null;
       })
-
-      uniqueArray.forEach(function(element){
-        if(element != null) {
-          return null
-
-
+      console.log(uniqueArray)
+      uniqueArray.forEach(function(element) {
+        
+        if(element != null){
+          const product = {
+            code: element.code,
+            email: vm.emailUser
+          }
+          console.log(vm.emailUser)
+          
+          axios.post('http://localhost:3000/insertFavs', { product })
+            .then(function (response) {
+              return response 
+            })
         }
       })
     }

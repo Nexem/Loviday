@@ -5,7 +5,7 @@
         <span class="research">List of your products</span>
       </v-card-title>
 
-      <!-- List of products -->          
+      <!-- List of favorite products -->          
       <v-simple-table 
         shaped v-if="resultProducts!=''" 
         >
@@ -19,6 +19,7 @@
               <th class="text-left">Number of additives</th>
               <th class="text-left">Add to Favorite</th>
               <th class="text-left">Delete</th>
+              <th class="text-left">Information</th>
             </tr>
           </thead>
           <tbody>
@@ -46,7 +47,7 @@
                   :value="item"
                   :checked="false"
                   text icon color="red"
-                  @click="deleteItem($event, i)"
+                  @click="deleteItem(item.code)"
                   
                 > <v-icon>mdi-cancel</v-icon>
                 </v-btn>
@@ -92,14 +93,15 @@ import axios from 'axios'
 export default {
   data: () => ({
     products: [],
-    numberProduct: ''
+    numberProduct: '',
+    emailPage: ''
   }),
 
   created(){
     const vm = this
-
+    this.emailPage = this.$store.getters.getEmail 
     const emailUser = {
-      email: this.$store.getters.getEmail
+      email: this.emailPage
     }
 
     axios.post('http://localhost:3000/getList', { emailUser })
@@ -136,9 +138,16 @@ export default {
       this.$store.commit('addFavsList', val)
     },
 
-//faire avec le SQL
-    deleteItem(){
-
+    //Faire avec le SQL
+    deleteItem(codeItem){
+      const infos = {
+        email: this.emailPage,
+        code: codeItem
+      }
+      axios.post('http://localhost:3000/deleteList', { infos })
+        .then(function (response) {
+          return response
+        })
     }
   }
 }

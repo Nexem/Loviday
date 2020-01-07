@@ -16,8 +16,8 @@
               <th class="text-left">Nova score</th>
               <th class="text-left">Nutri score</th>
               <th class="text-left">Number of additives</th>
-              <th class="text-left">Add to Favorite</th>
               <th class="text-left">Delete</th>
+              <th class="text-left">Information</th>
             </tr>
           </thead>
           <tbody>
@@ -36,15 +36,39 @@
                 <v-btn
                   :value="item"
                   :checked="false"
-                  name="checkboxe"
                   text icon color="red"
-                  @click="deleteItem($event, i)"
-                  
+                  @click="deleteItem(item.code)"
                 > <v-icon>mdi-cancel</v-icon>
                 </v-btn>
               </td>
+              <td>
+                <v-dialog v-model="Register" max-width="600px" style="background-color: floralwhite" class="mx-3" v-if="!connected"  :disabled="connected">
+                  <template v-slot:activator="{ on }">
+                    <v-btn text icon color="#F1C100" dark v-on="on">
+                      <v-icon>mdi-information</v-icon>
+                    </v-btn>
+                  </template>
+                  <v-card>
+                    <tr>
+                      <v-img
+                          :src="item.image_url"
+                          max-height="250"
+                          max-width="250"
+                        ></v-img>
+                      <v-card-text>Product name :         {{ item.product_name }}</v-card-text>
+                      <v-card-text>Nova group :           {{ item.nova_group }}</v-card-text>
+                      <v-card-text>Nutriscore :           {{ item.nutriscore_grade }}</v-card-text>
+                      <v-card-text>Additives :            {{ item.additives_n }}</v-card-text>
+                      <v-card-text>Origin :               {{ item.origins }}</v-card-text>
+                      <v-card-text>Manufacturing place :  {{ item.manufacturing_places }}</v-card-text>
+                      <v-card-text>Energy (100g) :        {{ item.energy_100g }} Kj</v-card-text>
+                      <v-card-text>Ingredients :          {{ item.ingredients_text }}</v-card-text>
+                    </tr>
+                  </v-card>
+                </v-dialog>
+              </td>
             </tr>
-            <small>Number of products in your Fav List : {{numberProduct}}</small>
+            <small>Number of products in your list : {{numberProduct}}</small>
           </tbody>
         </template>
       </v-simple-table>
@@ -55,28 +79,65 @@
 
 
 <script>
+import axios from 'axios'
+
 export default {
   data: () => ({
     products: [],
-    numberProduct: ''
+    numberProduct: '',
+    emailPage: ''
   }),
   
-  methods: {
-    created(){
-      this.products = this.$store.getters.getFavs
-      this.numberProduct = this.products.length
-      console.log(this.products)
-      console.log(this.numberProduct)
-    },
+  created(){
+    const vm = this
+    this.emailPage = this.$store.getters.getEmail 
+    const emailUser = {
+      email: this.emailPage
+      }
 
+    axios.post('http://localhost:3000/getFavs', { emailUser })
+    .then(function (response) {
+      console.log(response)
+      const result = response.data
+      let codeList = []
+
+      //Extract only code variable to push in Array
+      result.forEach(function(element) {
+        codeList.push(element.Code)
+      })
+
+      console.log(codeList)
+
+      //Sort to eliminate duplicatas
+      let uniqueArray = [...new Set(codeList)]
+      vm.numberProduct = uniqueArray.length
+
+      //Get products informations from API
+      uniqueArray.forEach(function(code) {
+        axios.post('http://localhost:3000/code', { code })
+        .then(function (response) {
+          vm.products.push(response.data)
+        })
+      })
+    })
+  },
+
+  methods: {
     // function to redirect to other pages
     movePage(path) {
       this.$router.push(path);
     },
 
-//Faire avec le SQL
-    deleteFavs(){
-
+    //Faire avec le SQL
+    deleteItem(codeItem){
+      const infos = {
+        email: this.emailPage,
+        code: codeItem
+      }
+      axios.post('http://localhost:3000/deleteFavs', { infos })
+        .then(function (response) {
+          return response
+        })
     }
   }
 }

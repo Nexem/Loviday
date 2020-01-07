@@ -44,6 +44,8 @@ app.post('/auth', async function (request, response) {
     connection.query('SELECT * FROM users WHERE email = \'' + email + '\' AND pwd = \'' + pwd + '\';', function (err, result, fields) {
       if (err) throw err
       if (result.length > 0) {
+        console.log(response)
+
         response.send(objUser)
       } else {
         response.send(null)
@@ -112,6 +114,82 @@ app.post('/getList', async (request, response) => {
       } else {
         response.send(null)
       }
+      response.end()
+    })
+  } else {
+    response.end()
+  }
+})
+
+app.post('/insertFavs', async (request, response) => {
+  const objUser = request.body.product
+  const code = objUser.code
+  const email = objUser.email
+  console.log('infos', code, email)
+
+  if (email && code) {
+    connection.query('INSERT INTO favorite (Code,Email) VALUES (?,?)', [code, email], function (err, results, fields) {
+      if (err) throw err
+
+      console.log(results)
+
+      response.end()
+    })
+  } else {
+    response.end()
+  }
+})
+
+app.post('/getFavs', async (request, response) => {
+  const obj = request.body.emailUser
+  const email = obj.email
+  if (email) {
+    connection.query('SELECT * FROM favorite WHERE Email = ?', [email], function (err, results, fields) {
+      if (err) throw err
+
+      if (results.length > 0) {
+        response.send(results)
+      } else {
+        response.send(null)
+      }
+      response.end()
+    })
+  } else {
+    response.end()
+  }
+})
+
+app.post('/deleteFavs', async (request, response) => {
+  const objUser = request.body.infos
+  const code = objUser.code
+  const email = objUser.email
+  console.log('infos', code, email)
+
+  if (email && code) {
+    connection.query('DELETE FROM favorite WHERE Code = ? AND Email = ?', [code, email], function (err, results, fields) {
+      if (err) throw err
+
+      console.log(results)
+
+      response.end()
+    })
+  } else {
+    response.end()
+  }
+})
+
+app.post('/deleteList', async (request, response) => {
+  const objUser = request.body.infos
+  const code = objUser.code
+  const email = objUser.email
+  console.log('infos', code, email)
+
+  if (email && code) {
+    connection.query('DELETE FROM list WHERE code = ? AND Email = ?', [code, email], function (err, results, fields) {
+      if (err) throw err
+
+      console.log(results)
+
       response.end()
     })
   } else {
