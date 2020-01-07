@@ -6,20 +6,22 @@ const logger = require('morgan')
 const csv = require('csv-parser')
 const axios = require('axios')
 const cors = require('cors')
+const serveStatic = require('serve-static')
 const app = express()
 
 // For DB Communication
 const mysql = require('mysql')
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'))
-app.set('view engine', 'ejs')
+// app.set('views', path.join(__dirname, 'views'))
+// app.set('view engine', 'ejs')
 
 app.use(cors())
 app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
+app.use('/', serveStatic(path.join(__dirname, '/dist')))
 
 /*
 *

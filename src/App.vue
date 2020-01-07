@@ -255,7 +255,7 @@ export default {
         pwd: pwduser
       }
       //Query for auth
-      axios.post('http://localhost:3000/auth', { user })
+      axios.post('http://loviday.herokuapp.com/auth', { user })
         .then(function (response) {
           console.log(response) 
           if(response.data != null) {
@@ -299,7 +299,7 @@ export default {
 
       if (this.pwdreg === this.pwdreg2) {
         //Query for auth
-        axios.post('http://localhost:3000/register', { registerUser })
+        axios.post('http://loviday.herokuapp.com/register', { registerUser })
           .then(function (response) {
             console.log(response) 
             if(response.data != null) {
