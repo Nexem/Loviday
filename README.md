@@ -1,6 +1,8 @@
 # Loviday
 Asynchronous Programming project repo
 
+Link to deployed Loviday website : https://loviday.herokuapp.com/Lists
+
 Link to the specification on google drive : 
 https://docs.google.com/document/d/1JTXnYhJt1o7ouNftORzqDJryLtW5tXUKg0cixRo0xXI/edit?usp=sharing
 <br/>
